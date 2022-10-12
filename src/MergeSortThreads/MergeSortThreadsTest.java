@@ -22,7 +22,6 @@ public class MergeSortThreadsTest {
 
     @Test
     public void randomTest() {
-        Assert.fail();
         Random random = new Random();
         Integer[] integers = new Integer[random.nextInt(100)];
         for (int i = 0; i < integers.length;i++) {
@@ -34,7 +33,7 @@ public class MergeSortThreadsTest {
 
     boolean checkSorted(Comparable[] array) {
         for (int i = 1; i < array.length; i++) {
-            if (array[i-1].compareTo(array[i]) <= 0) {
+            if (array[i-1].compareTo(array[i]) > 0) {
                 return false;
             }
         }
