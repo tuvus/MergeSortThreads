@@ -2,6 +2,7 @@ package SortBenchmarks;
 
 import MergeSortThreads.MergeSortThreads;
 import OtherSorters.MergeSort;
+import OtherSorters.MergeSortLessAlocc;
 import org.openjdk.jmh.annotations.*;
 
 import java.util.Random;
@@ -16,6 +17,10 @@ public class SorterBenchmarks {
     @Benchmark
     public void mergeSortThreadsBenchmark() {
         MergeSortThreads.sortArray(getRandomArray().clone());
+    }
+    @Benchmark
+    public void mergeSortLessAloccBenchmark() {
+        MergeSortLessAlocc.sortArray(getRandomArray().clone());
     }
 
     @Benchmark
