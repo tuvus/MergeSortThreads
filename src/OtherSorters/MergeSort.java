@@ -8,9 +8,8 @@ public class MergeSort {
     /**
      * @param output the array to return to
      */
-
-    private static void mergeSortRec(Comparable[] output) {
-        if (output.length == 1)
+    public static void mergeSortRec(Comparable[] output) {
+        if (output.length <= 1)
             return;
         Comparable[] array1 = new Comparable[output.length / 2];
         Comparable[] array2 = new Comparable[output.length - array1.length];

@@ -1,5 +1,6 @@
 package OtherSorters;
 
+import SortBenchmarks.SorterBenchmarks;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,7 +23,7 @@ public class OtherSortersTest {
     @Test
     public void randomTest() {
         Random random = new Random();
-        Integer[] integers = new Integer[random.nextInt(100)];
+        Integer[] integers = new Integer[random.nextInt(20,1000)];
         for (int i = 0; i < integers.length;i++) {
             integers[i] = random.nextInt();
         }

@@ -11,7 +11,6 @@ public class MergeSortThreads {
      * @param lower  the lower index to be sorted
      * @param upper  the upper index to be sorted
      */
-
     private static void mergeSortRec(Comparable[] output, Comparable[] copy, int lower, int upper) {
         if (upper - lower <= 0)
             return;
