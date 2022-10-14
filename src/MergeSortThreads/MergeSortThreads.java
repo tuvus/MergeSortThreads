@@ -1,9 +1,5 @@
 package MergeSortThreads;
 
-import org.junit.rules.Stopwatch;
-
-import java.util.Timer;
-
 public class MergeSortThreads {
     private MergeSortThreads() {
     }
@@ -18,9 +14,7 @@ public class MergeSortThreads {
         @Override
         public void run() {
             mergeSortRec(arrayPartition.output, arrayPartition.copy, arrayPartition.lowerIndex, arrayPartition.upperIndex);
-            while (arrayPartition.setSorted()) {
-                if (arrayPartition.parentPartition == null)
-                    break;
+            while (arrayPartition.parentPartition != null && arrayPartition.parentPartition.setSorted()) {
                 arrayPartition = arrayPartition.parentPartition;
                 merge(arrayPartition.output, arrayPartition.copy,
                         arrayPartition.leftPartition.lowerIndex, arrayPartition.leftPartition.upperIndex,
@@ -31,7 +25,7 @@ public class MergeSortThreads {
 
     private static class ArrayPartition {
         public final ArrayPartition parentPartition;
-        private boolean sorted;
+        private boolean halfSorted;
         public final Comparable[] output;
         public final Comparable[] copy;
         public final int lowerIndex;
@@ -39,36 +33,41 @@ public class MergeSortThreads {
         public ArrayPartition leftPartition;
         public ArrayPartition rightPartition;
 
-        public ArrayPartition(ArrayPartition parentPartition, Comparable[] output, Comparable[] copy, int lowerIndex, int upperIndex, int levels, MergeSortThread[] threads) {
+        public ArrayPartition(ArrayPartition parentPartition, boolean leftOrRight, Comparable[] output, Comparable[] copy, int lowerIndex, int upperIndex, int levels, MergeSortThread[] threads, Integer threadsCount) {
             this.parentPartition = parentPartition;
+            if (parentPartition != null) {
+                //The parentPartition.left/right Partition needs to be assigned here because a thead may finish before
+                //the parentPartition assigns it's left/right Partition
+                if (leftOrRight)
+                    parentPartition.rightPartition = this;
+                else
+                    parentPartition.leftPartition = this;
+            }
+            this.halfSorted = false;
             this.output = output;
             this.copy = copy;
             this.lowerIndex = lowerIndex;
             this.upperIndex = upperIndex;
-            if (levels <= 0) {
-                int firstInactiveThread = -1;
-                for (int i = 0; i < threads.length; i++) {
-                    if (threads[i] == null) {
-                        firstInactiveThread = i;
-                        break;
-                    }
-                }
-                if (firstInactiveThread != -1) {
-                    threads[firstInactiveThread] = new MergeSortThread(this);
-                    threads[firstInactiveThread].start();
+            if (levels <= 0 || upperIndex - lowerIndex <= 10) {
+                halfSorted = true;
+                if (threadsCount < threads.length) {
+                    threads[threadsCount] = new MergeSortThread(this);
+                    threadsCount++;
+                    threads[threadsCount - 1].run();
                     return;
                 } else {
                     throw new IllegalArgumentException("There was not enough room in the threads array for the thread count that was generated." +
                             " The array needs to be able to store all threads that are generated in order to work correctly.");
                 }
+            } else {
+                new ArrayPartition(this, false, copy, output, lowerIndex, lowerIndex + ((upperIndex - lowerIndex) / 2), levels - 1, threads, threadsCount);
+                new ArrayPartition(this, true, copy, output, lowerIndex + ((upperIndex - lowerIndex) / 2) + 1, upperIndex, levels - 1, threads, threadsCount);
             }
-            leftPartition = new ArrayPartition(this, output, copy, lowerIndex, lowerIndex + ((upperIndex - lowerIndex) / 2), levels - 1, threads);
-            rightPartition = new ArrayPartition(this, output, copy, lowerIndex + ((upperIndex - lowerIndex) / 2) + 1, upperIndex, levels - 1, threads);
         }
 
         public synchronized boolean setSorted() {
-            if (!sorted) {
-                sorted = true;
+            if (!halfSorted) {
+                halfSorted = true;
                 return false;
             }
             return true;
@@ -77,14 +76,16 @@ public class MergeSortThreads {
 
     public static void sortArray(Comparable[] array) {
         int threadCount = Runtime.getRuntime().availableProcessors();
-        final MergeSortThread[] threads = new MergeSortThread[(int)Math.pow(Math.ceil(Math.sqrt(threadCount)),2)];
-        ArrayPartition arrayPartition = new ArrayPartition(null, array, array.clone(), 0, array.length - 1, (int) Math.ceil(Math.sqrt(threadCount)), threads);
+        final MergeSortThread[] threads = new MergeSortThread[(int) Math.pow(Math.ceil(Math.sqrt(threadCount)), 2)];
+        Integer threadsCount = 0;
+        ArrayPartition arrayPartition = new ArrayPartition(null, false, array, array.clone(), 0, array.length - 1, (int) Math.ceil(Math.sqrt(threadCount)), threads, threadsCount);
         long time = System.currentTimeMillis();
-        while (!arrayPartition.sorted) {
-            if (System.currentTimeMillis() - time > 30000) {
+        while (!arrayPartition.halfSorted) {
+            if (System.currentTimeMillis() - time > 3000) {
                 System.out.println("Ending code execution because of time.");
-                for (int i = 0; i < threads.length; i++) {
-                    threads[i].interrupt();
+                for (int i = 0; i < threadsCount; i++) {
+                    if (threads[i] != null)
+                        threads[i].interrupt();
                 }
                 return;
             }
