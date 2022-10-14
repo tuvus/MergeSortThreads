@@ -18,6 +18,7 @@ public class SorterBenchmarks {
     public void mergeSortThreadsBenchmark() {
         MergeSortThreads.sortArray(getRandomArray().clone());
     }
+
     @Benchmark
     public void mergeSortLessAloccBenchmark() {
         MergeSortLessAlocc.sortArray(getRandomArray().clone());
