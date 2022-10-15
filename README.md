@@ -18,8 +18,6 @@ these tests are not very accurate and are just an idea of the efficiency.
 The first question someone might raise about mergesort's space efficiency is if all the extra arrays are required.
 My initial approach to this problem was to replace the creation of multiple arrays with lower and upper indices.
 
-MergeSortLessAlocc is the class with the efficiencies described bellow.
-
 #### Can we contain the space used to the original array?
 Taking a first look at how mergeSort method is usually set up makes it seem unnecessary to create any additional arrays.
 
@@ -100,7 +98,6 @@ Results with 11 processors (the main thread was not doing any work):
 * The mergeSortThreads algorithm takes anywhere from 96.7430380377%
   to 81.253655388% as long as MergeSortLessAlocc.
 
----
 ### Benchmark Data
 Below is the data used for each of the time efficiency percentages with an array of 500000 random integers and 11 free logical processors.
 
@@ -109,7 +106,6 @@ Below is the data used for each of the time efficiency percentages with an array
     mergeSortLessAloccBenchmark  avgt  200  173619167.000 ± 7953554.967  ns/op
     mergeSortThreadsBenchmark    avgt  200  153902210.500 ± 6367737.229  ns/op
 
----
 ### Conclusion
 The way the mergesort algorithm partitions arrays makes it inefficient,
 but allows for some beneficial additions to be made to it.
