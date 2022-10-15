@@ -1,8 +1,8 @@
 # A mergesort space/time efficiency experiment
 Mergesort is one of the primary sorting algorithms with an efficiency of time = O(nLogn) and space = O(n).
-Where n is the length of the array to sort. 
+Where n is the length of the array to sort.
 O() is Big O Notation, the worst-case efficiency as count (n) goes towards infinity.
-The purpose of this project is to explore two potential efficiencies that can improve 
+The purpose of this project is to explore two potential efficiencies that can improve
 the performance of the mergesort algorithm in both space and time complexity.
 
 Three separate classes where made during this experiment:
@@ -10,13 +10,15 @@ Three separate classes where made during this experiment:
 * MergeSortLessAlocc, uses only 2 arrays rather than n count of arrays
 * MergeSortThreads, uses 2 array and multithreading
 
-Note: The values in this file come from benchmark tests, 
+Note: The values in this file come from benchmark tests,
 these tests are not very accurate and are just an idea of the efficiency.
 
 ---
 ### Space Complexity
 The first question someone might raise about mergesort's space efficiency is if all the extra arrays are required.
 My initial approach to this problem was to replace the creation of multiple arrays with lower and upper indices.
+
+MergeSortLessAlocc is the class with the efficiencies described bellow.
 
 #### Can we contain the space used to the original array?
 Taking a first look at how mergeSort method is usually set up makes it seem unnecessary to create any additional arrays.
@@ -36,11 +38,9 @@ By using an output array and a copy array with indices rather than creating new 
 the mergeSort algorithm doesn't have to allocate as much space as before.
 The algorithm now requires the space of only twice the value of n or O(1).
 
-Results: 
-* The mergeSortLessAlloc algorithm takes anywhere from 95.9184720835% 
+Results:
+* The mergeSortLessAlloc algorithm takes anywhere from 95.9184720835%
   to 86.4908427325% as long as the original mergeSort.
-
-In this project the test was called mergeSortLessAlocc.
 
 ---
 ### Time Complexity
@@ -73,7 +73,7 @@ But what should spend the time to mergesort them together?
 Some options are: the main, second or last thread.
 
 The second processor is ideal to mergesort the two parts after it completes its work.
-This leaves the main thread free to do its own business, 
+This leaves the main thread free to do its own business,
 scales along with the amount of threads used and doesn't require a new thread to take over.
 
 MergeSortThreads uses this efficiency because it seems easier to implement.
@@ -98,6 +98,7 @@ Results with 11 processors (the main thread was not doing any work):
 * The mergeSortThreads algorithm takes anywhere from 96.7430380377%
   to 81.253655388% as long as MergeSortLessAlocc.
 
+---
 ### Benchmark Data
 Below is the data used for each of the time efficiency percentages with an array of 500000 random integers and 11 free logical processors.
 
@@ -106,6 +107,7 @@ Below is the data used for each of the time efficiency percentages with an array
     mergeSortLessAloccBenchmark  avgt  200  173619167.000 ± 7953554.967  ns/op
     mergeSortThreadsBenchmark    avgt  200  153902210.500 ± 6367737.229  ns/op
 
+---
 ### Conclusion
 The way the mergesort algorithm partitions arrays makes it inefficient,
 but allows for some beneficial additions to be made to it.
