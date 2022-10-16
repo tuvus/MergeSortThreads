@@ -57,7 +57,7 @@ Too many or too little work for the threads will increase the amount of time the
 * If you divide the array into way too many sections,
   the extra overhead required will slow down the algorithm and add extra complexity.
 
-MergeSortThreads is the class with the efficiencies described bellow.
+MergeSortThreads is the class with one of the efficiencies described bellow.
 
 #### Divide the array by the number of available cores
 This idea of dividing the array into parts in this way ensures that all processors are doing just the right amount of work.
@@ -100,7 +100,7 @@ Results with 11 processors (the main thread was not doing any work):
 
 ---
 ### Benchmark Data
-Below is the data used for each of the time efficiency percentages with an array of 500000 random integers and 11 free logical processors.
+Below is the data used for each of the time efficiency percentages with an array of 500,000 random integers and 11 free logical processors.
 
     Benchmark                    Mode  Cnt          Score         Error  Units
     mergeSortBenchmark           avgt  200  190826843.500 ± 8990625.085  ns/op
@@ -115,7 +115,7 @@ The first addition reduced the space requirement to twice of the given array to 
 This puts much less stress on memory, garbage collection, and copying values around.
 The second addition seperated the work and gives it to multiple processors to reduce the sorting time.
 While these algorithms show great improvements on the sorting time,
-it is important to note that benchmarks are widely inaccurate and results should not be taken for granted.
+it is important to note that benchmarks have a large range of error and results should not be taken for granted.
 
 
 ## Authors
