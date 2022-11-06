@@ -7,9 +7,23 @@ import java.util.Random;
 
 public class MergeSortThreadsDivideTest {
     @Test
-    public void sortTest() {
+    public void miniSortTest() {
+        Integer[] integers = new Integer[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        new MergeSortThreadsDivide<Integer>(integers);
+        Assert.assertTrue(checkSorted(integers));
+    }
+
+    @Test
+    public void mediumSortTest() {
+        Integer[] integers = new Integer[]{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21};
+        new MergeSortThreadsDivide<Integer>(integers);
+        Assert.assertTrue(checkSorted(integers));
+    }
+
+    @Test
+    public void largeSortTest() {
         Integer[] integers = new Integer[]{7, 4, 1, 10, 0, 8, 14, 15, 3, 9, 5, 6, 11, 12, 2, 13,
-                                           -1, -12, -13, -14, -15, -2, -3, -16, -4, -5, -10, -11, -6, -7, -8, -9};
+                -1, -12, -13, -14, -15, -2, -3, -16, -4, -5, -10, -11, -6, -7, -8, -9};
         new MergeSortThreadsDivide<Integer>(integers);
         Assert.assertTrue(checkSorted(integers));
     }

@@ -1,5 +1,10 @@
 package MergeSortThreads;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
 public class MergeSortThreadsDivide<E extends Comparable<E>> {
     private E[] array;
     private E[] copy;
@@ -21,7 +26,7 @@ public class MergeSortThreadsDivide<E extends Comparable<E>> {
         int upperIndex = size - 1;
         if (remainder > 0)
             upperIndex++;
-        sections[0] = new SortSection<E>(0, 0, size, outputArray, new MergeSortThread());
+        sections[0] = new SortSection<E>(0, 0, upperIndex, outputArray, new MergeSortThread());
         sections[0].mergeSortThread.section = sections[0];
         for (int i = 1; i < sections.length - 1; i++) {
             lowerIndex = upperIndex + 1;
@@ -34,13 +39,24 @@ public class MergeSortThreadsDivide<E extends Comparable<E>> {
         sections[sections.length - 1] = new SortSection<E>(sections.length - 1, upperIndex + 1, array.length - 1, outputArray, new MergeSortThread());
         sections[sections.length - 1].mergeSortThread.section = sections[sections.length - 1];
 
-        for (int i = 0; i < sections.length; i++) {
-            sections[i].mergeSortThread.run();
+        ArrayList<SortSection<E>> randSections = new ArrayList<>();
+        ArrayList<SortSection<E>> tempSections = new ArrayList(List.of(sections));
+        while (!tempSections.isEmpty()) {
+            randSections.add(tempSections.remove(new Random(10).nextInt(0, tempSections.size())));
         }
+
+        for (int i = 0; i < randSections.size(); i++) {
+            System.out.println(i);
+            randSections.get(i).mergeSortThread.run();
+        }
+
+//        for (int i = 0; i < sections.length; i++) {
+//            sections[i].mergeSortThread.start();
+//        }
 
         long time = System.currentTimeMillis();
         while (!sections[0].sorted && sections[0].sectionLength == sections.length) {
-            if (System.currentTimeMillis() - time > 3000) {
+            if (System.currentTimeMillis() - time > 30000) {
                 System.out.println("Ending code execution because of time.");
                 for (int i = 0; i < sections.length; i++) {
                     if (sections[i].mergeSortThread != null)
@@ -51,9 +67,9 @@ public class MergeSortThreadsDivide<E extends Comparable<E>> {
         }
     }
 
-    private class SortSection<T extends Comparable<T>> {
+    private class SortSection<E extends Comparable<E>> {
         public final int sectionIndex;
-        public SortSection<T> merged;
+        public SortSection<E> merged;
         public boolean sorted;
         public boolean outputArray;
         public int sectionLength;
@@ -73,6 +89,14 @@ public class MergeSortThreadsDivide<E extends Comparable<E>> {
         }
     }
 
+    /**
+     * Gets a new target section index on the True array (array) to merge to.
+     * If the target section index is found it sets that section to not sorted.
+     * If no section is found it sets the given section to sorted.
+     *
+     * @param sectionIndex the given section
+     * @return -1 if no target section is found, 0-sections.length - 1 if a section is found
+     */
     private synchronized int getNewTrueSectionToMergeInto(int sectionIndex) {
         for (int i = 0; i < sections.length; i++) {
             if (i == sectionIndex)
@@ -82,9 +106,18 @@ public class MergeSortThreadsDivide<E extends Comparable<E>> {
                 return i;
             }
         }
+        sections[sectionIndex].sorted = true;
         return -1;
     }
 
+    /**
+     * Gets a new target section index on the False array (copy) to merge to.
+     * If the target section index is found it sets that section to not sorted.
+     * If no section is found it sets the given section to sorted.
+     *
+     * @param sectionIndex the given section
+     * @return -1 if no target section is found, 0-sections.length - 1 if a section is found
+     */
     private synchronized int getNewFalseSectionToMergeInto(int sectionIndex) {
         for (int i = 0; i < sections.length; i++) {
             if (i == sectionIndex)
@@ -94,6 +127,7 @@ public class MergeSortThreadsDivide<E extends Comparable<E>> {
                 return i;
             }
         }
+        sections[sectionIndex].sorted = true;
         return -1;
     }
 
@@ -106,6 +140,10 @@ public class MergeSortThreadsDivide<E extends Comparable<E>> {
                 mergeSortRec(array, copy, section.lowerIndex, section.upperIndex);
             else
                 mergeSortRec(copy, array, section.lowerIndex, section.upperIndex);
+            if (section.outputArray)
+                checkIfSectionChainIsInOrder(section, array);
+            else
+                checkIfSectionChainIsInOrder(section,copy);
             section.outputArray = !section.outputArray;
             int mergeTargetIndex = -1;
             if (section.outputArray)
@@ -123,7 +161,6 @@ public class MergeSortThreadsDivide<E extends Comparable<E>> {
                 else
                     mergeTargetIndex = getNewFalseSectionToMergeInto(section.sectionIndex);
             }
-            section.sorted = true;
         }
     }
 
@@ -142,11 +179,18 @@ public class MergeSortThreadsDivide<E extends Comparable<E>> {
     }
 
     private SortSection<E> mergeSections(E[] output, E[] input, SortSection<E> section1, SortSection<E> section2) {
+        int section1Index = section1.sectionIndex;
+        int section2Index = section2.sectionIndex;
+        System.out.println("Merging section " + section1.sectionIndex + " l=" + section1.sectionLength + " with section " + section2.sectionIndex + " l=" + section2.sectionLength);
         SortSection<E>[] newSectionOrder = new SortSection[section1.sectionLength + section2.sectionLength];
         getSectionOrder(newSectionOrder, section1, section2);
         int lhs = section1.lowerIndex, rhs = section2.lowerIndex;
         int newSectionOrderIndex = 0;
         int index = newSectionOrder[newSectionOrderIndex].lowerIndex;
+        checkIfEachIndexInASectionChainHasADuplicate(input, output, section1);
+        checkIfEachIndexInASectionChainHasADuplicate(input, output, section2);
+        checkIfSectionChainIsInOrder(section1,input);
+        checkIfSectionChainIsInOrder(section2,input);
         while (lhs <= section1.upperIndex && rhs <= section2.upperIndex) {
             if ((input[lhs]).compareTo(input[rhs]) <= 0) {
                 output[index] = input[lhs];
@@ -170,28 +214,77 @@ public class MergeSortThreadsDivide<E extends Comparable<E>> {
             }
         }
         if (lhs <= section1.upperIndex) {
-            while (section1 != null) {
-                System.arraycopy(input, lhs, output, index, section1.upperIndex - lhs + 1);
-                index += section1.upperIndex - lhs + 1;
-                if (section1.merged != null) {
+            while (true) {
+                output[index] = input[lhs];
+                lhs++;
+                if (lhs > section1.upperIndex && section1.merged != null) {
                     section1 = section1.merged;
                     lhs = section1.lowerIndex;
-                } else {
-                    section1 = null;
+                } else if (lhs > section1.upperIndex) {
+                    break;
+                }
+                index++;
+                if (index > newSectionOrder[newSectionOrderIndex].upperIndex) {
+                    newSectionOrderIndex++;
+                    index = newSectionOrder[newSectionOrderIndex].lowerIndex;
                 }
             }
         } else {
-            while (section2 != null) {
-                System.arraycopy(input, rhs, output, index, section2.upperIndex - rhs + 1);
-                index += section2.upperIndex - rhs + 1;
-                if (section2.merged != null) {
+            while (true) {
+                output[index] = input[rhs];
+                rhs++;
+                if (rhs > section2.upperIndex && section2.merged != null) {
                     section2 = section2.merged;
                     rhs = section2.lowerIndex;
-                } else {
-                    section2 = null;
+                } else if (rhs > section2.upperIndex) {
+                    break;
+                }
+                index++;
+                if (index > newSectionOrder[newSectionOrderIndex].upperIndex) {
+                    newSectionOrderIndex++;
+                    index = newSectionOrder[newSectionOrderIndex].lowerIndex;
                 }
             }
         }
+//        if (lhs <= section1.upperIndex) {
+//            while (true) {
+//                int length = Math.min(section1.upperIndex - lhs + 1, newSectionOrder[newSectionOrderIndex].upperIndex - index + 1);
+//                System.arraycopy(input, lhs, output, index, length);
+//                index += length;
+//                lhs += length;
+//                if (lhs > section1.upperIndex) {
+//                    if (section1.merged != null) {
+//                        section1 = section1.merged;
+//                        lhs = section1.lowerIndex;
+//                    } else {
+//                        break;
+//                    }
+//                }
+//                if (index > newSectionOrder[newSectionOrderIndex].upperIndex) {
+//                    newSectionOrderIndex++;
+//                    index = newSectionOrder[newSectionOrderIndex].lowerIndex;
+//                }
+//            }
+//        } else {
+//            while (true) {
+//                int length = Math.min(section2.upperIndex - rhs + 1, newSectionOrder[newSectionOrderIndex].upperIndex - index + 1);
+//                System.arraycopy(input, rhs, output, index, length);
+//                index += length;
+//                rhs += length;
+//                if (rhs > section2.upperIndex) {
+//                    if (section2.merged != null) {
+//                        section2 = section2.merged;
+//                        rhs = section2.lowerIndex;
+//                    } else {
+//                        break;
+//                    }
+//                }
+//                if (index > newSectionOrder[newSectionOrderIndex].upperIndex) {
+//                    newSectionOrderIndex++;
+//                    index = newSectionOrder[newSectionOrderIndex].lowerIndex;
+//                }
+//            }
+//        }
         for (int i = 0; i < newSectionOrder.length; i++) {
             if (i == newSectionOrder.length - 1)
                 newSectionOrder[i].merged = null;
@@ -199,7 +292,66 @@ public class MergeSortThreadsDivide<E extends Comparable<E>> {
                 newSectionOrder[i].merged = newSectionOrder[i + 1];
         }
         newSectionOrder[0].sectionLength = newSectionOrder.length;
+        checkIfSectionChainIsInOrder(newSectionOrder[0],output);
+        checkIfEachIndexInASectionChainHasADuplicate(input, output, newSectionOrder[0]);
+        System.out.println("Finished merging section " + section1Index + " with " + section2Index);
         return newSectionOrder[0];
+    }
+
+    void checkIfEachIndexInASectionChainHasADuplicate(E[] output, E[] input, SortSection<E> section) {
+        SortSection<E> startSection = section;
+        while (section != null) {
+            for (int i = section.lowerIndex; i <= section.upperIndex; i++) {
+                boolean found = false;
+                SortSection<E> section2 = startSection;
+                while (section2 != null) {
+                    for (int f = section2.lowerIndex; f <= section2.upperIndex; f++) {
+                        if (output[i].equals(input[f])) {
+                            found = true;
+                            section2 = null;
+                            break;
+                        }
+                    }
+                    if (section2 != null) {
+                        section2 = section2.merged;
+                    }
+                }
+                if (!found) {
+                    throw new IllegalStateException("Some data was lost in the transfer " + i);
+                }
+            }
+            section = section.merged;
+        }
+    }
+
+    void checkIfEachArrayHasSameNumbers(E[] output, E[] input) {
+        for (int i = 0; i < output.length; i++) {
+            boolean found = false;
+            for (int f = 0; f < output.length; f++) {
+                if (input[i].equals(output[f])) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                throw new IllegalStateException("Some data was lost in the transfer " + i);
+            }
+        }
+    }
+
+    void checkIfSectionChainIsInOrder(SortSection<E> section, E[] array) {
+        int previousIndex = section.lowerIndex;
+        while (section != null) {
+            for (int i = section.lowerIndex; i <= section.upperIndex; i++) {
+                if (previousIndex == i)
+                    continue;
+                if (array[previousIndex].compareTo(array[i]) > 0) {
+                    throw new RuntimeException("The section chain was not in order " + i);
+                }
+                previousIndex = i;
+            }
+            section = section.merged;
+        }
     }
 
     private void getSectionOrder(SortSection<E>[] newSectionOrder, SortSection<E> section1, SortSection<E> section2) {
