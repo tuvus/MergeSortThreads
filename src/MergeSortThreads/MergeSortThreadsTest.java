@@ -2,7 +2,6 @@ package MergeSortThreads;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.internal.runners.statements.Fail;
 
 import java.util.Random;
 
