@@ -53,11 +53,12 @@ public class MergeSortThreadsDivideTest {
             for (int f = 0; f < integers.length; f++) {
                 integers[f] = random.nextInt();
             }
-            MergeSortThreadsDivide<Integer> mergeSortThreadsDivide = new MergeSortThreadsDivide<>(integers);
+            int threads = random.nextInt(3,20);
+            MergeSortThreadsDivide<Integer> mergeSortThreadsDivide = new MergeSortThreadsDivide<>(integers, threads);
             mergeSortThreadsDivide.startSort();
             boolean out = checkSorted(integers);
             if (!out)
-                Assert.fail("Test " + i + " failed. \n" + Arrays.toString(integers));
+                Assert.fail("Test " + i + " failed with " + threads + " threads and an output of:\n" + Arrays.toString(integers));
         }
     }
 
