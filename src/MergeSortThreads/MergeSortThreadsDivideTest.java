@@ -45,6 +45,22 @@ public class MergeSortThreadsDivideTest {
         Assert.assertTrue(out);
     }
 
+    @Test
+    public void randomBruteForceTest() {
+        Random random = new Random();
+        for (int i = 0; i < 50; i++) {
+            Integer[] integers = new Integer[random.nextInt(100, 100000)];
+            for (int f = 0; f < integers.length; f++) {
+                integers[f] = random.nextInt();
+            }
+            MergeSortThreadsDivide<Integer> mergeSortThreadsDivide = new MergeSortThreadsDivide<>(integers);
+            mergeSortThreadsDivide.startSort();
+            boolean out = checkSorted(integers);
+            if (!out)
+                Assert.fail("Test " + i + " failed. \n" + Arrays.toString(integers));
+        }
+    }
+
     boolean checkSorted(Comparable[] array) {
         for (int i = 1; i < array.length; i++) {
             if (array[i - 1].compareTo(array[i]) > 0) {
