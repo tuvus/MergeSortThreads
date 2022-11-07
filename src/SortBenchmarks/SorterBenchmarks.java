@@ -19,6 +19,7 @@ public class SorterBenchmarks {
     @Benchmark
     public void mergeSortThreadsDivideBenchmark() {
         MergeSortThreadsDivide<Integer> mergeSortThreadsDivide = new MergeSortThreadsDivide<>((Integer[]) getRandomArray().clone());
+        mergeSortThreadsDivide.startSort();
     }
 
     @Benchmark
@@ -43,7 +44,7 @@ public class SorterBenchmarks {
 
     Comparable[] getRandomArray() {
         Random random = new Random(2);
-        Integer[] integers = new Integer[5000];
+        Integer[] integers = new Integer[50000];
         for (int i = 0; i < integers.length; i++) {
             integers[i] = random.nextInt();
         }
