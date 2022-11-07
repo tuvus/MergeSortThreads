@@ -31,7 +31,7 @@ public class MergeSortThreadsDivideTest {
     @Test
     public void randomTest() {
         Random random = new Random();
-        Integer[] integers = new Integer[random.nextInt(20, 1000)];
+        Integer[] integers = new Integer[random.nextInt(20, 100000)];
         for (int i = 0; i < integers.length; i++) {
             integers[i] = random.nextInt();
         }

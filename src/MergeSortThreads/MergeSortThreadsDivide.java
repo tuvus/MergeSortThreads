@@ -20,73 +20,77 @@ public class MergeSortThreadsDivide<E extends Comparable<E>> {
         sections = new SortSection[threadCount];
         int size = array.length / threadCount;
         int remainder = array.length % threadCount;
-        boolean outputArray = threadCount % 2 == 0;
 
+        boolean outputArray = threadCount % 2 == 1;
+        boolean even = threadCount % 2 == 0;
         int lowerIndex = 0;
         int upperIndex = size - 1;
         if (remainder > 0)
             upperIndex++;
-        sections[0] = new SortSection<E>(0, 0, upperIndex, outputArray, new MergeSortThread());
+        sections[0] = new SortSection<E>(0, 0, upperIndex, !even, new MergeSortThread());
         sections[0].mergeSortThread.section = sections[0];
         for (int i = 1; i < sections.length - 1; i++) {
             lowerIndex = upperIndex + 1;
             upperIndex = Math.min(array.length - 1, lowerIndex + size - 1);
             if (i < remainder)
                 upperIndex++;
-            sections[i] = new SortSection<E>(i, lowerIndex, upperIndex, outputArray, new MergeSortThread());
+            sections[i] = new SortSection<E>(i, lowerIndex, upperIndex, !outputArray, new MergeSortThread());
+            outputArray = !outputArray;
             sections[i].mergeSortThread.section = sections[i];
         }
-        sections[sections.length - 1] = new SortSection<E>(sections.length - 1, upperIndex + 1, array.length - 1, outputArray, new MergeSortThread());
+        sections[sections.length - 1] = new SortSection<E>(sections.length - 1, upperIndex + 1, array.length - 1, !even, new MergeSortThread());
         sections[sections.length - 1].mergeSortThread.section = sections[sections.length - 1];
 
-        ArrayList<SortSection<E>> randSections = new ArrayList<>();
-        ArrayList<SortSection<E>> tempSections = new ArrayList(List.of(sections));
-        while (!tempSections.isEmpty()) {
-            randSections.add(tempSections.remove(new Random(10).nextInt(0, tempSections.size())));
+        for (int i = 0; i < sections.length; i++) {
+            sections[i].mergeSortThread.start();
         }
-
-        for (int i = 0; i < randSections.size(); i++) {
-            System.out.println(i);
-            randSections.get(i).mergeSortThread.run();
-        }
-
-//        for (int i = 0; i < sections.length; i++) {
-//            sections[i].mergeSortThread.start();
-//        }
 
         long time = System.currentTimeMillis();
-        while (!sections[0].sorted && sections[0].sectionLength == sections.length) {
-            if (System.currentTimeMillis() - time > 30000) {
-                System.out.println("Ending code execution because of time.");
-                for (int i = 0; i < sections.length; i++) {
-                    if (sections[i].mergeSortThread != null)
-                        sections[i].mergeSortThread.interrupt();
+        boolean finished = false;
+        while (!finished) {
+            finished = true;
+            for (SortSection<E> eSortSection : sections) {
+                if (eSortSection.mergeSortThread.isAlive()) {
+                    finished = false;
+                    break;
                 }
-                return;
+            }
+            if (System.currentTimeMillis() - time > 100000) {
+                for (SortSection<E> section : sections) {
+                    if (section.mergeSortThread != null)
+                        section.mergeSortThread.interrupt();
+                }
+                break;
             }
         }
+        System.out.println("Ending sorting finished: " + finished);
+}
+
+private class SortSection<E extends Comparable<E>> {
+    public final int sectionIndex;
+    public SortSection<E> merged;
+    public boolean sorted;
+    public boolean outputArray;
+    public int sectionLength;
+    public int lowerIndex;
+    public int upperIndex;
+    public MergeSortThread mergeSortThread;
+
+    public SortSection(int sectionIndex, int lowerIndex, int upperIndex, boolean outputArray, MergeSortThread mergeSortThread) {
+        this.sectionIndex = sectionIndex;
+        this.lowerIndex = lowerIndex;
+        this.upperIndex = upperIndex;
+        this.outputArray = outputArray;
+        this.mergeSortThread = mergeSortThread;
+        this.sorted = false;
+        this.merged = null;
+        this.sectionLength = 1;
     }
+}
 
-    private class SortSection<E extends Comparable<E>> {
-        public final int sectionIndex;
-        public SortSection<E> merged;
-        public boolean sorted;
-        public boolean outputArray;
-        public int sectionLength;
-        public int lowerIndex;
-        public int upperIndex;
-        public MergeSortThread mergeSortThread;
+    private synchronized void printSafe(String text) {
 
-        public SortSection(int sectionIndex, int lowerIndex, int upperIndex, boolean outputArray, MergeSortThread mergeSortThread) {
-            this.sectionIndex = sectionIndex;
-            this.lowerIndex = lowerIndex;
-            this.upperIndex = upperIndex;
-            this.outputArray = outputArray;
-            this.mergeSortThread = mergeSortThread;
-            this.sorted = false;
-            this.merged = null;
-            this.sectionLength = 1;
-        }
+        //System.out.println(text);
     }
 
     /**
@@ -131,34 +135,37 @@ public class MergeSortThreadsDivide<E extends Comparable<E>> {
         return -1;
     }
 
-    private class MergeSortThread extends Thread {
-        SortSection<E> section;
+private class MergeSortThread extends Thread {
+    SortSection<E> section;
 
-        @Override
-        public void run() {
+    @Override
+    public void run() {
+        int originalThread = section.sectionIndex;
+        if (section.outputArray)
+            mergeSortRec(array, copy, section.lowerIndex, section.upperIndex);
+        else
+            mergeSortRec(copy, array, section.lowerIndex, section.upperIndex);
+        section.outputArray = !section.outputArray;
+        int mergeTargetIndex = -1;
+        if (section.outputArray)
+            mergeTargetIndex = getNewTrueSectionToMergeInto(section.sectionIndex);
+        else
+            mergeTargetIndex = getNewFalseSectionToMergeInto(section.sectionIndex);
+        while (mergeTargetIndex != -1) {
             if (section.outputArray)
-                mergeSortRec(array, copy, section.lowerIndex, section.upperIndex);
+                section = mergeSections(array, copy, section, sections[mergeTargetIndex]);
             else
-                mergeSortRec(copy, array, section.lowerIndex, section.upperIndex);
+                section = mergeSections(copy, array, section, sections[mergeTargetIndex]);
             section.outputArray = !section.outputArray;
-            int mergeTargetIndex = -1;
             if (section.outputArray)
                 mergeTargetIndex = getNewTrueSectionToMergeInto(section.sectionIndex);
             else
                 mergeTargetIndex = getNewFalseSectionToMergeInto(section.sectionIndex);
-            while (mergeTargetIndex != -1) {
-                if (section.outputArray)
-                    section = mergeSections(array, copy, section, sections[mergeTargetIndex]);
-                else
-                    section = mergeSections(copy, array, section, sections[mergeTargetIndex]);
-                section.outputArray = !section.outputArray;
-                if (section.outputArray)
-                    mergeTargetIndex = getNewTrueSectionToMergeInto(section.sectionIndex);
-                else
-                    mergeTargetIndex = getNewFalseSectionToMergeInto(section.sectionIndex);
-            }
         }
+        printSafe("Ending thead " + originalThread);
     }
+
+}
 
     /**
      * @param output the array that should be sorted at between the indices given
@@ -177,7 +184,7 @@ public class MergeSortThreadsDivide<E extends Comparable<E>> {
     private SortSection<E> mergeSections(E[] output, E[] input, SortSection<E> section1, SortSection<E> section2) {
         int section1Index = section1.sectionIndex;
         int section2Index = section2.sectionIndex;
-        System.out.println("Merging section " + section1.sectionIndex + " l=" + section1.sectionLength + " with section " + section2.sectionIndex + " l=" + section2.sectionLength);
+        printSafe("Merging section " + section1.sectionIndex + " l=" + section1.sectionLength + " with section " + section2.sectionIndex + " l=" + section2.sectionLength);
         SortSection<E>[] newSectionOrder = new SortSection[section1.sectionLength + section2.sectionLength];
         getSectionOrder(newSectionOrder, section1, section2);
         int lhs = section1.lowerIndex, rhs = section2.lowerIndex;
@@ -251,7 +258,7 @@ public class MergeSortThreadsDivide<E extends Comparable<E>> {
                 newSectionOrder[i].merged = newSectionOrder[i + 1];
         }
         newSectionOrder[0].sectionLength = newSectionOrder.length;
-        System.out.println("Finished merging section " + section1Index + " with " + section2Index);
+        printSafe("Finished merging section " + section1Index + " with " + section2Index);
         return newSectionOrder[0];
     }
 
