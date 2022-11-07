@@ -13,8 +13,8 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Fork(value = 2)
-@Warmup(iterations = 2)
-@Measurement(iterations = 100, timeUnit = TimeUnit.NANOSECONDS, time = 1)
+@Warmup(iterations = 3)
+@Measurement(iterations = 500, timeUnit = TimeUnit.NANOSECONDS, time = 1)
 public class SorterBenchmarks {
     @Benchmark
     public void mergeSortThreadsDivideBenchmark() {
@@ -44,7 +44,7 @@ public class SorterBenchmarks {
 
     Comparable[] getRandomArray() {
         Random random = new Random(2);
-        Integer[] integers = new Integer[50000];
+        Integer[] integers = new Integer[500000];
         for (int i = 0; i < integers.length; i++) {
             integers[i] = random.nextInt();
         }

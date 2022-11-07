@@ -107,6 +107,13 @@ Below is the data used for each of the time efficiency percentages with an array
     mergeSortLessAloccBenchmark  avgt  200  173619167.000 ± 7953554.967  ns/op
     mergeSortThreadsBenchmark    avgt  200  153902210.500 ± 6367737.229  ns/op
 
+    Benchmark                        Mode   Cnt          Score         Error  Units
+    mergeSortBenchmark               avgt  1000  150288646.300 ± 1252370.567  ns/op
+    mergeSortLessAloccBenchmark      avgt  1000  120328726.700 ±  856003.595  ns/op
+    mergeSortThreadsBenchmark        avgt  1000  122931923.200 ±  735847.095  ns/op
+    mergeSortThreadsDivideBenchmark  avgt  1000   51175402.100 ±  386889.766  ns/op
+    referenceSortBenchmark           avgt  1000  112343767.900 ±  711244.155  ns/op
+
 ---
 ### Conclusion
 The way the mergesort algorithm partitions arrays makes it inefficient,
