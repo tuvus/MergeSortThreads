@@ -19,13 +19,15 @@ public class SorterBenchmarks {
     @Benchmark
     public void mergeSortThreadsDivideBenchmark() {
         MergeSortThreadsDivide<Integer> mergeSortThreadsDivide = new MergeSortThreadsDivide<>((Integer[]) getRandomArray().clone());
-        mergeSortThreadsDivide.startSort();
+        mergeSortThreadsDivide.start();
         mergeSortThreadsDivide.complete();
     }
 
     @Benchmark
     public void mergeSortThreadsBenchmark() {
-        MergeSortThreads.sortArray(getRandomArray().clone());
+        MergeSortThreads<Integer> mergeSortThreads = new MergeSortThreads<>((Integer[]) getRandomArray().clone());
+        mergeSortThreads.start();
+        mergeSortThreads.complete();
     }
 
     @Benchmark

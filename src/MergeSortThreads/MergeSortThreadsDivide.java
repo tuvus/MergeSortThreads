@@ -47,13 +47,13 @@ public class MergeSortThreadsDivide<E extends Comparable<? super E>> {
         sections.get(threadCount - 1).mergeSortThread.section = sections.get(threadCount - 1);
     }
 
-    public void startSort() {
+    public void start() {
         for (int i = 0; i < sections.size(); i++) {
             sections.get(i).mergeSortThread.start();
         }
     }
 
-    public void runSort() {
+    public void run() {
         for (int i = 0; i < sections.size(); i++) {
             sections.get(i).mergeSortThread.run();
         }

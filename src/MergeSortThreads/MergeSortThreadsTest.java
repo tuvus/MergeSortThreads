@@ -15,8 +15,11 @@ public class MergeSortThreadsTest {
         integers[3] = 2;
         integers[4] = -2;
         integers[5] = 3;
-        MergeSortThreads.sortArray(integers);
+        MergeSortThreads<Integer> mergeSortThreads = new MergeSortThreads(integers);
+        mergeSortThreads.start();
+        mergeSortThreads.complete();
         Assert.assertTrue(checkSorted(integers));
+        Assert.assertTrue(mergeSortThreads.isCompleted());
     }
 
     @Test
@@ -26,8 +29,11 @@ public class MergeSortThreadsTest {
         for (int i = 0; i < integers.length;i++) {
             integers[i] = random.nextInt();
         }
-        MergeSortThreads.sortArray(integers);
+        MergeSortThreads<Integer> mergeSortThreads = new MergeSortThreads(integers);
+        mergeSortThreads.start();
+        mergeSortThreads.complete();
         Assert.assertTrue(checkSorted(integers));
+        Assert.assertTrue(mergeSortThreads.isCompleted());
     }
 
     boolean checkSorted(Comparable[] array) {

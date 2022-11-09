@@ -11,7 +11,7 @@ public class MergeSortThreadsDivideTest {
     public void miniSortTest() {
         Integer[] integers = new Integer[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         MergeSortThreadsDivide<Integer> mergeSortThreadsDivide = new MergeSortThreadsDivide<>(integers);
-        mergeSortThreadsDivide.startSort();
+        mergeSortThreadsDivide.start();
         mergeSortThreadsDivide.complete();
         Assert.assertTrue(checkSorted(integers));
         Assert.assertTrue(mergeSortThreadsDivide.isCompleted());
@@ -21,7 +21,7 @@ public class MergeSortThreadsDivideTest {
     public void mediumSortTest() {
         Integer[] integers = new Integer[]{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21};
         MergeSortThreadsDivide<Integer> mergeSortThreadsDivide = new MergeSortThreadsDivide<>(integers);
-        mergeSortThreadsDivide.startSort();
+        mergeSortThreadsDivide.start();
         mergeSortThreadsDivide.complete();
         Assert.assertTrue(checkSorted(integers));
         Assert.assertTrue(mergeSortThreadsDivide.isCompleted());
@@ -32,7 +32,7 @@ public class MergeSortThreadsDivideTest {
         Integer[] integers = new Integer[]{7, 4, 1, 10, 0, 8, 14, 15, 3, 9, 5, 6, 11, 12, 2, 13,
                 -1, -12, -13, -14, -15, -2, -3, -16, -4, -5, -10, -11, -6, -7, -8, -9};
         MergeSortThreadsDivide<Integer> mergeSortThreadsDivide = new MergeSortThreadsDivide<>(integers);
-        mergeSortThreadsDivide.startSort();
+        mergeSortThreadsDivide.start();
         mergeSortThreadsDivide.complete();
         Assert.assertTrue(checkSorted(integers));
         Assert.assertTrue(mergeSortThreadsDivide.isCompleted());
@@ -46,7 +46,7 @@ public class MergeSortThreadsDivideTest {
             integers[i] = random.nextInt();
         }
         MergeSortThreadsDivide<Integer> mergeSortThreadsDivide = new MergeSortThreadsDivide<>(integers);
-        mergeSortThreadsDivide.startSort();
+        mergeSortThreadsDivide.start();
         mergeSortThreadsDivide.complete();
         boolean out = checkSorted(integers);
         Assert.assertTrue(out);
@@ -61,7 +61,7 @@ public class MergeSortThreadsDivideTest {
             integers[i] = random.nextInt();
         }
         MergeSortThreadsDivide<Integer> mergeSortThreadsDivide = new MergeSortThreadsDivide<>(integers);
-        mergeSortThreadsDivide.startSort();
+        mergeSortThreadsDivide.start();
         mergeSortThreadsDivide.complete();
         boolean out = checkSorted(integers);
         Assert.assertTrue(out);
@@ -78,7 +78,7 @@ public class MergeSortThreadsDivideTest {
             }
             int threads = random.nextInt(3,20);
             MergeSortThreadsDivide<Integer> mergeSortThreadsDivide = new MergeSortThreadsDivide<>(integers, threads);
-            mergeSortThreadsDivide.startSort();
+            mergeSortThreadsDivide.start();
             mergeSortThreadsDivide.complete();
             boolean out = checkSorted(integers);
             if (!out)

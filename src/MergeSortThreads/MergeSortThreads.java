@@ -1,10 +1,25 @@
 package MergeSortThreads;
 
-public class MergeSortThreads {
+import java.util.ArrayList;
+
+public class MergeSortThreads<E extends Comparable<? super E>> {
+    private E[] array;
+    private E[] copy;
+    private ArrayPartition arrayPartition;
+    private ArrayList<MergeSortThread> threads;
+    private boolean completed;
+
     private MergeSortThreads() {
     }
 
-    private static class MergeSortThread extends Thread {
+    public MergeSortThreads(E[] array) {
+        this.array = array;
+        this.copy = array.clone();
+        setupSort(Runtime.getRuntime().availableProcessors());
+    }
+
+
+    private class MergeSortThread extends Thread {
         ArrayPartition arrayPartition;
 
         protected MergeSortThread(ArrayPartition arrayPartition) {
@@ -20,10 +35,12 @@ public class MergeSortThreads {
                         arrayPartition.leftPartition.lowerIndex, arrayPartition.leftPartition.upperIndex,
                         arrayPartition.rightPartition.lowerIndex, arrayPartition.rightPartition.upperIndex);
             }
+            if (arrayPartition.parentPartition == null)
+                completed = true;
         }
     }
 
-    private static class ArrayPartition {
+    private class ArrayPartition {
         public final ArrayPartition parentPartition;
         private boolean halfSorted;
         public final Comparable[] output;
@@ -33,16 +50,8 @@ public class MergeSortThreads {
         public ArrayPartition leftPartition;
         public ArrayPartition rightPartition;
 
-        public ArrayPartition(ArrayPartition parentPartition, boolean leftOrRight, Comparable[] output, Comparable[] copy, int lowerIndex, int upperIndex, int levels, MergeSortThread[] threads, Integer threadsCount) {
+        public ArrayPartition(ArrayPartition parentPartition, Comparable[] output, Comparable[] copy, int lowerIndex, int upperIndex, int levels) {
             this.parentPartition = parentPartition;
-            if (parentPartition != null) {
-                //The parentPartition.left/right Partition needs to be assigned here because a thead may finish before
-                //the parentPartition assigns it's left/right Partition
-                if (leftOrRight)
-                    parentPartition.rightPartition = this;
-                else
-                    parentPartition.leftPartition = this;
-            }
             this.halfSorted = false;
             this.output = output;
             this.copy = copy;
@@ -50,22 +59,14 @@ public class MergeSortThreads {
             this.upperIndex = upperIndex;
             if (levels <= 0 || upperIndex - lowerIndex <= 10) {
                 halfSorted = true;
-                if (threadsCount < threads.length) {
-                    threads[threadsCount] = new MergeSortThread(this);
-                    threadsCount++;
-                    threads[threadsCount - 1].run();
-                    return;
-                } else {
-                    throw new IllegalArgumentException("There was not enough room in the threads array for the thread count that was generated." +
-                            " The array needs to be able to store all threads that are generated in order to work correctly.");
-                }
+                threads.add(new MergeSortThread(this));
             } else {
-                new ArrayPartition(this, false, copy, output, lowerIndex, lowerIndex + ((upperIndex - lowerIndex) / 2), levels - 1, threads, threadsCount);
-                new ArrayPartition(this, true, copy, output, lowerIndex + ((upperIndex - lowerIndex) / 2) + 1, upperIndex, levels - 1, threads, threadsCount);
+                leftPartition = new ArrayPartition(this, copy, output, lowerIndex, lowerIndex + ((upperIndex - lowerIndex) / 2), levels - 1);
+                rightPartition = new ArrayPartition(this, copy, output, lowerIndex + ((upperIndex - lowerIndex) / 2) + 1, upperIndex, levels - 1);
             }
         }
 
-        public synchronized boolean setSorted() {
+        private synchronized boolean setSorted() {
             if (!halfSorted) {
                 halfSorted = true;
                 return false;
@@ -74,22 +75,38 @@ public class MergeSortThreads {
         }
     }
 
-    public static void sortArray(Comparable[] array) {
-        int threadCount = Runtime.getRuntime().availableProcessors();
-        final MergeSortThread[] threads = new MergeSortThread[(int) Math.pow(Math.ceil(Math.sqrt(threadCount)), 2)];
-        Integer threadsCount = 0;
-        ArrayPartition arrayPartition = new ArrayPartition(null, false, array, array.clone(), 0, array.length - 1, (int) Math.ceil(Math.sqrt(threadCount)), threads, threadsCount);
-        long time = System.currentTimeMillis();
-        while (!arrayPartition.halfSorted) {
-            if (System.currentTimeMillis() - time > 3000) {
-                System.out.println("Ending code execution because of time.");
-                for (int i = 0; i < threadsCount; i++) {
-                    if (threads[i] != null)
-                        threads[i].interrupt();
+    private void setupSort(int threadCount) {
+        threads = new ArrayList<>((int) Math.pow(Math.ceil(Math.sqrt(threadCount)), 2));
+        arrayPartition = new ArrayPartition(null, array, array.clone(), 0, array.length - 1, (int) Math.ceil(Math.sqrt(threadCount)));
+    }
+
+    public void start() {
+        for (int i = 0; i < threads.size(); i++) {
+            threads.get(i).start();
+        }
+    }
+
+    public void run() {
+        for (int i = 0; i < threads.size(); i++) {
+            threads.get(i).run();
+        }
+    }
+
+    public void complete () {
+        while (!completed) {
+            for (int i = 0; i < threads.size(); i++) {
+                try {
+                    threads.get(i).join();
+                } catch (InterruptedException e) {
+                    System.out.println("A thread was interrupted while completing the sort. Thread index " + i +
+                            "Trying to continue on as normal.");
                 }
-                return;
             }
         }
+    }
+
+    public boolean isCompleted() {
+        return completed;
     }
 
     /**
