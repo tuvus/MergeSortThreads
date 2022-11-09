@@ -5,13 +5,13 @@ package OtherSorters;
  * MergeSortThreadsLessAlocc is a static class that sorts an array.
  * MergeSortThreadsLessAlocc uses the classical MergeSort algorithm using multithreading.
  * It also only uses two arrays instead of recursively creating more arrays.
- * The space complexity is O(2n) rather than O(nlogn)
+ * The space complexity is O(2) rather than O(n)
  *
  * @author Oskar
  */
 public class MergeSortLessAlocc {
     /**
-     * Sorts the array using mergesort and only a space complexity of O(2n).
+     * Sorts the array using mergesort and only a space complexity of O(2).
      *
      * @param array the array to sort
      * @param <E>   the type of element to sort
