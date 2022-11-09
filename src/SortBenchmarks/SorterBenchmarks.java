@@ -12,12 +12,12 @@ import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-@Fork(value = 2)
-@Warmup(iterations = 5)
-@Measurement(iterations = 500, timeUnit = TimeUnit.NANOSECONDS, time = 1)
-//@Fork(value = 0)
-//@Warmup(iterations = 0)
-//@Measurement(iterations = 10, timeUnit = TimeUnit.NANOSECONDS, time = 1)
+//@Fork(value = 2)
+//@Warmup(iterations = 5)
+//@Measurement(iterations = 500, timeUnit = TimeUnit.NANOSECONDS, time = 1)
+@Fork(value = 0)
+@Warmup(iterations = 0)
+@Measurement(iterations = 10, timeUnit = TimeUnit.NANOSECONDS, time = 1)
 public class SorterBenchmarks {
 
     @State(Scope.Benchmark)
