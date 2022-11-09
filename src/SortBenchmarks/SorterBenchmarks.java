@@ -15,37 +15,57 @@ import java.util.concurrent.TimeUnit;
 @Fork(value = 2)
 @Warmup(iterations = 3)
 @Measurement(iterations = 500, timeUnit = TimeUnit.NANOSECONDS, time = 1)
+//@Fork(value = 0)
+//@Warmup(iterations = 0)
+//@Measurement(iterations = 10, timeUnit = TimeUnit.NANOSECONDS, time = 1)
 public class SorterBenchmarks {
+
+    @State(Scope.Benchmark)
+    public static class SorterState {
+        public Integer[] reference;
+        public Integer[] copy;
+
+        @Setup(Level.Trial)
+        public void setupArray() {
+            reference = (Integer[]) getRandomArray();
+        }
+
+        @Setup(Level.Iteration)
+        public void copyArray() {
+            copy = reference.clone();
+        }
+    }
+
     @Benchmark
-    public void mergeSortThreadsDivideBenchmark() {
-        MergeSortThreadsDivide<Integer> mergeSortThreadsDivide = new MergeSortThreadsDivide<>((Integer[]) getRandomArray().clone());
+    public void mergeSortThreadsDivideBenchmark(SorterState sorterState) {
+        MergeSortThreadsDivide<Integer> mergeSortThreadsDivide = new MergeSortThreadsDivide<>(sorterState.copy);
         mergeSortThreadsDivide.start();
         mergeSortThreadsDivide.complete();
     }
 
     @Benchmark
-    public void mergeSortThreadsBenchmark() {
-        MergeSortThreads<Integer> mergeSortThreads = new MergeSortThreads<>((Integer[]) getRandomArray().clone());
+    public void mergeSortThreadsBenchmark(SorterState sorterState) {
+        MergeSortThreads<Integer> mergeSortThreads = new MergeSortThreads<>(sorterState.copy);
         mergeSortThreads.start();
         mergeSortThreads.complete();
     }
 
     @Benchmark
-    public void mergeSortLessAloccBenchmark() {
-        MergeSortLessAlocc.sortArray(getRandomArray().clone());
+    public void mergeSortLessAloccBenchmark(SorterState sorterState) {
+        MergeSortLessAlocc.sortArray(sorterState.copy);
     }
 
     @Benchmark
-    public void mergeSortBenchmark() {
-        MergeSort.sortArray(getRandomArray().clone());
+    public void mergeSortBenchmark(SorterState sorterState) {
+        MergeSort.sortArray(sorterState.copy);
     }
 
     @Benchmark
-    public void referenceSortBenchmark() {
-        Arrays.sort(getRandomArray().clone());
+    public void referenceSortBenchmark(SorterState sorterState) {
+        Arrays.sort(sorterState.copy);
     }
 
-    Comparable[] getRandomArray() {
+    static Comparable[] getRandomArray() {
         Random random = new Random(2);
         Integer[] integers = new Integer[500000];
         for (int i = 0; i < integers.length; i++) {
