@@ -12,12 +12,12 @@ import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-@Fork(value = 2)
-@Warmup(iterations = 5)
-@Measurement(iterations = 500, timeUnit = TimeUnit.NANOSECONDS, time = 1)
-//@Fork(value = 0)
-//@Warmup(iterations = 0)
-//@Measurement(iterations = 10, timeUnit = TimeUnit.NANOSECONDS, time = 1)
+//@Fork(value = 2)
+//@Warmup(iterations = 5)
+//@Measurement(iterations = 500, timeUnit = TimeUnit.NANOSECONDS, time = 1)
+@Fork(value = 0)
+@Warmup(iterations = 0)
+@Measurement(iterations = 10, timeUnit = TimeUnit.NANOSECONDS, time = 1)
 public class SorterBenchmarks {
 
     @State(Scope.Benchmark)
@@ -65,12 +65,12 @@ public class SorterBenchmarks {
         Arrays.sort(sorterState.copy);
     }
 
-    static Comparable[] getRandomArray() {
+     static <E extends Comparable<? super E>> E[] getRandomArray() {
         Random random = new Random(2);
-        Integer[] integers = new Integer[500000];
+        Integer[] integers = new Integer[1000000];
         for (int i = 0; i < integers.length; i++) {
             integers[i] = random.nextInt();
         }
-        return integers;
+        return (E[])integers;
     }
 }
