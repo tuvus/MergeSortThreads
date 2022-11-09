@@ -1,17 +1,35 @@
 package OtherSorters;
 
+
+/**
+ * MergeSortThreadsLessAlocc is a static class that sorts an array.
+ * MergeSortThreadsLessAlocc uses the classical MergeSort algorithm using multithreading.
+ * It also only uses two arrays instead of recursively creating more arrays.
+ * The space complexity is O(2n) rather than O(nlogn)
+ *
+ * @author Oskar
+ */
 public class MergeSortLessAlocc {
-    public static void sortArray(Comparable[] array) {
+    /**
+     * Sorts the array using mergesort and only a space complexity of O(2n).
+     *
+     * @param array the array to sort
+     * @param <E>   the type of element to sort
+     */
+    public static <E extends Comparable<? super E>> void sortArray(E[] array) {
         mergeSortRec(array, array.clone(), 0, array.length - 1);
     }
 
     /**
-     * @param output the array to return to
-     * @param copy   the array with copied values
+     * Recursively sorts the individual section alternating what arrays are the output and copy.
+     *
+     * @param output the array that should be sorted at between the indices given
+     * @param copy   the array with the given values
      * @param lower  the lower index to be sorted
      * @param upper  the upper index to be sorted
+     * @param <E>    the type of element to sort
      */
-    private static void mergeSortRec(Comparable[] output, Comparable[] copy, int lower, int upper) {
+    private static <E extends Comparable<? super E>> void mergeSortRec(E[] output, E[] copy, int lower, int upper) {
         if (upper - lower <= 0)
             return;
         mergeSortRec(copy, output, lower, lower + ((upper - lower) / 2));
@@ -19,7 +37,18 @@ public class MergeSortLessAlocc {
         merge(output, copy, lower, lower + ((upper - lower) / 2), lower + ((upper - lower) / 2) + 1, upper);
     }
 
-    private static void merge(Comparable[] output, Comparable[] copy, int lower, int upper, int lower2, int upper2) {
+    /**
+     * Merges the two parts of the array together in sorted order
+     *
+     * @param output the array that should end up sorted
+     * @param copy   the half sorted array with the values to sort
+     * @param lower  the lower index to be sorted of the first part
+     * @param upper  the upper index to be sorted of the first part
+     * @param lower2 the lower index to be sorted of the second part
+     * @param upper2 the upper index to be sorted of the second part
+     * @param <E>    the type of element to sort
+     */
+    private static <E extends Comparable<? super E>> void merge(E[] output, E[] copy, int lower, int upper, int lower2, int upper2) {
         int lhs = lower, rhs = lower2;
         int index = lower;
         while (lhs <= upper && rhs <= upper2) {
