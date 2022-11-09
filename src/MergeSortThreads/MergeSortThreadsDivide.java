@@ -4,6 +4,7 @@ import java.util.ArrayList;
 /**
  * MergeSortThreadsDivide is an instantiated class that sorts an array given in its constructor during its life.
  * MergeSortThreadsDivide uses the classical MergeSort algorithm using multithreading.
+ * MergeSortThreadsDivide splits the array into x sections where x is the amount of threads to use.
  * It also only uses two arrays instead of recursively creating more arrays.
  * While sorting the main thread will be available to do other work with.
  * The sorting is completed when isCompleted returns true.
