@@ -20,6 +20,7 @@ public class SorterBenchmarks {
     public void mergeSortThreadsDivideBenchmark() {
         MergeSortThreadsDivide<Integer> mergeSortThreadsDivide = new MergeSortThreadsDivide<>((Integer[]) getRandomArray().clone());
         mergeSortThreadsDivide.startSort();
+        mergeSortThreadsDivide.complete();
     }
 
     @Benchmark

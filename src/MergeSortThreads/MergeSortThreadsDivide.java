@@ -1,11 +1,10 @@
 package MergeSortThreads;
-
 import java.util.ArrayList;
-
 public class MergeSortThreadsDivide<E extends Comparable<? super E>> {
     private E[] array;
     private E[] copy;
     private ArrayList<SortSection> sections;
+    private boolean completed;
 
     private MergeSortThreadsDivide() {
     }
@@ -17,6 +16,7 @@ public class MergeSortThreadsDivide<E extends Comparable<? super E>> {
     public MergeSortThreadsDivide(E[] array, int threadCount) {
         this.array = array;
         this.copy = array.clone();
+        completed = false;
         setupSections(threadCount);
     }
 
@@ -51,31 +51,29 @@ public class MergeSortThreadsDivide<E extends Comparable<? super E>> {
         for (int i = 0; i < sections.size(); i++) {
             sections.get(i).mergeSortThread.start();
         }
-
-        long time = System.currentTimeMillis();
-        boolean finished = false;
-        while (!finished) {
-            finished = true;
-            for (SortSection eSortSection : sections) {
-                if (eSortSection.mergeSortThread.isAlive()) {
-                    finished = false;
-                    break;
-                }
-            }
-            if (System.currentTimeMillis() - time > 100000) {
-                for (SortSection section : sections) {
-                    if (section.mergeSortThread != null)
-                        section.mergeSortThread.interrupt();
-                }
-                break;
-            }
-        }
     }
 
     public void runSort() {
         for (int i = 0; i < sections.size(); i++) {
             sections.get(i).mergeSortThread.run();
         }
+    }
+
+    public void complete() {
+        while (!completed) {
+            for (int i = 0; i < sections.size(); i++) {
+                try {
+                    sections.get(i).mergeSortThread.join();
+                } catch (InterruptedException e) {
+                    System.out.println("A thread was interrupted while completing the sort. Thread index " + i +
+                            "Trying to continue on as normal.");
+                }
+            }
+        }
+    }
+
+    public boolean isCompleted() {
+        return completed;
     }
 
     private class SortSection {
@@ -168,6 +166,8 @@ public class MergeSortThreadsDivide<E extends Comparable<? super E>> {
                 else
                     mergeTargetIndex = getNewFalseSectionToMergeInto(section.sectionIndex);
             }
+            if (section.sectionLength == sections.size())
+                completed = true;
         }
     }
 
