@@ -27,7 +27,7 @@ public class SorterBenchmarks {
 
         @Setup(Level.Trial)
         public void setupArray() {
-            reference = (Integer[]) getRandomArray();
+            reference = getRandomArray();
         }
 
         @Setup(Level.Iteration)
@@ -65,12 +65,12 @@ public class SorterBenchmarks {
         Arrays.sort(sorterState.copy);
     }
 
-    static Comparable[] getRandomArray() {
+     static <E extends Comparable<? super E>> E[] getRandomArray() {
         Random random = new Random(2);
-        Integer[] integers = new Integer[500000];
+        Integer[] integers = new Integer[1000000];
         for (int i = 0; i < integers.length; i++) {
             integers[i] = random.nextInt();
         }
-        return integers;
+        return (E[])integers;
     }
 }
