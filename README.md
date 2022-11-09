@@ -100,19 +100,31 @@ Results with 11 processors (the main thread was not doing any work):
 
 ---
 ### Benchmark Data
-Below is the data used for each of the time efficiency percentages with an array of 500,000 random integers and 11 free logical processors.
+Below is the data used for each of the time efficiency percentages with an array of random integers and 11 free logical processors.
 
-    Benchmark                    Mode  Cnt          Score         Error  Units
-    mergeSortBenchmark           avgt  200  190826843.500 ± 8990625.085  ns/op
-    mergeSortLessAloccBenchmark  avgt  200  173619167.000 ± 7953554.967  ns/op
-    mergeSortThreadsBenchmark    avgt  200  153902210.500 ± 6367737.229  ns/op
-
+    With 500,000 integers
     Benchmark                        Mode   Cnt          Score         Error  Units
-    mergeSortBenchmark               avgt  1000  150288646.300 ± 1252370.567  ns/op
-    mergeSortLessAloccBenchmark      avgt  1000  120328726.700 ±  856003.595  ns/op
-    mergeSortThreadsBenchmark        avgt  1000  122931923.200 ±  735847.095  ns/op
-    mergeSortThreadsDivideBenchmark  avgt  1000   51175402.100 ±  386889.766  ns/op
-    referenceSortBenchmark           avgt  1000  112343767.900 ±  711244.155  ns/op
+    mergeSortBenchmark               avgt  1000  126441454.400 ±  653519.755  ns/op
+    mergeSortLessAloccBenchmark      avgt  1000  187137170.600 ± 2679979.258  ns/op
+    mergeSortThreadsBenchmark        avgt  1000   64718159.800 ±  806328.428  ns/op
+    mergeSortThreadsDivideBenchmark  avgt  1000   55104145.800 ±  679983.045  ns/op
+    referenceSortBenchmark           avgt  1000  151988780.700 ± 1399434.387  ns/op
+
+    With 500,000 integers
+    Benchmark                        Mode   Cnt          Score         Error  Units
+    mergeSortBenchmark               avgt  1000  136197938.300 ±  705244.269  ns/op
+    mergeSortLessAloccBenchmark      avgt  1000  116266659.500 ±  761437.478  ns/op
+    mergeSortThreadsBenchmark        avgt  1000   38331051.900 ±  416338.849  ns/op
+    mergeSortThreadsDivideBenchmark  avgt  1000   36110493.900 ±  416208.001  ns/op
+    referenceSortBenchmark           avgt  1000  110546845.800 ±  600905.478  ns/op
+
+    With 1,000,000 integers
+    Benchmark                        Mode   Cnt          Score         Error  Units
+    mergeSortBenchmark               avgt  1000  296869844.700 ± 2081476.766  ns/op
+    mergeSortLessAloccBenchmark      avgt  1000  346286170.300 ± 2221817.364  ns/op
+    mergeSortThreadsBenchmark        avgt  1000  113014873.300 ±  904190.210  ns/op
+    mergeSortThreadsDivideBenchmark  avgt  1000  128888370.400 ± 1127988.080  ns/op
+    referenceSortBenchmark           avgt  1000  291443285.900 ± 1194862.967  ns/op
 
 ---
 ### Conclusion
