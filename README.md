@@ -128,8 +128,8 @@ instead it compares and classifies the complexities of algorithms.
 How much time this new algorithm saves compared to n is a complicated question.
 
 Note: unlike mergesort and MergeSortLessAlloc,
-MergeSortThreads and MergeSortThreadsDivide uses multiple processors.
-Meaning that in addition to the processor speed on the computer,
+MergeSortThreads and MergeSortThreadsDivide use multiple processors.
+This means that in addition to the processor speed on the computer,
 it's time also **varies greatly based on the number of processors** that the computer has.
 
 Results with 11 processors (the main thread was not doing any work):
@@ -143,48 +143,25 @@ Results with 11 processors (the main thread was not doing any work):
 Below is the data used for each of the time efficiency percentages with an array of random integers 
 and 11 free logical processors.
 
-    With 500,000 integers
-    Benchmark                        Mode   Cnt          Score        Error  Units
-    mergeSortBenchmark               avgt  1000  137061322.888 ± 409579.631  ns/op
-    mergeSortLessAloccBenchmark      avgt  1000  111756663.718 ± 610055.018  ns/op
-    mergeSortThreadsBenchmark        avgt  1000   37237146.617 ± 295364.049  ns/op
-    mergeSortThreadsDivideBenchmark  avgt  1000   40014773.594 ± 631713.388  ns/op
-    referenceSortBenchmark           avgt  1000  114204377.476 ± 570910.511  ns/op
-
-    With 500,000 integers
-    Benchmark                        Mode   Cnt          Score        Error  Units
-    mergeSortBenchmark               avgt  1000  130818612.977 ± 729811.076  ns/op
-    mergeSortLessAloccBenchmark      avgt  1000  111388992.322 ± 556410.826  ns/op
-    mergeSortThreadsBenchmark        avgt  1000   34016566.808 ± 273445.018  ns/op
-    mergeSortThreadsDivideBenchmark  avgt  1000   39175946.606 ± 497280.066  ns/op
-    referenceSortBenchmark           avgt  1000  112806591.695 ± 725552.210  ns/op
-
+ 
     With 1,000,000 integers
-    Benchmark                        Mode   Cnt          Score         Error  Units
-    mergeSortBenchmark               avgt  1000  296869844.700 ± 2081476.766  ns/op
-    mergeSortLessAloccBenchmark      avgt  1000  346286170.300 ± 2221817.364  ns/op
-    mergeSortThreadsBenchmark        avgt  1000  113014873.300 ±  904190.210  ns/op
-    mergeSortThreadsDivideBenchmark  avgt  1000  128888370.400 ± 1127988.080  ns/op
-    referenceSortBenchmark           avgt  1000  291443285.900 ± 1194862.967  ns/op
 
-    With 1,000,000 integers
-    Benchmark                        Mode   Cnt          Score         Error  Units
-    mergeSortBenchmark               avgt  1000  296388663.175 ± 2094190.700  ns/op
-    mergeSortLessAloccBenchmark      avgt  1000  303615751.697 ± 1351574.766  ns/op
-    mergeSortThreadsBenchmark        avgt  1000  103530281.082 ±  632464.859  ns/op
-    mergeSortThreadsDivideBenchmark  avgt  1000  119935034.454 ± 1033022.645  ns/op
-    referenceSortBenchmark           avgt  1000  291532680.102 ± 1635428.685  ns/op
+
 
 ---
 ### Conclusion
-The way the mergesort algorithm partitions arrays makes it inefficient,
-but allows for some beneficial additions to be made to it.
-The first addition reduced the space requirement to twice of the given array to sort.
+The way the mergesort algorithm partitions arrays by making more is inefficient,
+but allows for some simple improvements to be made to it.
+The first improvement reduced the space requirement to twice of the given array to sort.
 This puts much less stress on memory, garbage collection, and copying values around.
 The second addition seperated the work and gives it to multiple processors to reduce the sorting time.
 While these algorithms show great improvements on the sorting time,
 it is important to note that benchmarks have a large range of error and results should not be taken for granted.
 
+It is also important to understand that while the array is being sorted in less time, it takes more resources total to
+sort the array with multiple threads.
+In theory if the computer would be using all of its processors 100% efficiently
+it would be better to sort on a single thread.
 
 ## Authors
 [tuvus](https://github.com/tuvus/) -
