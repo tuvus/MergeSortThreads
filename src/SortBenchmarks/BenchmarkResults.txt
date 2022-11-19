@@ -1,45 +1,40 @@
 With 500,000 integers
 Benchmark                        Mode   Cnt          Score        Error  Units
-mergeSortBenchmark               avgt  1000  137061322.888 ± 409579.631  ns/op
-mergeSortLessAloccBenchmark      avgt  1000  111756663.718 ± 610055.018  ns/op
-mergeSortThreadsBenchmark        avgt  1000   37237146.617 ± 295364.049  ns/op
-mergeSortThreadsDivideBenchmark  avgt  1000   40014773.594 ± 631713.388  ns/op
-referenceSortBenchmark           avgt  1000  114204377.476 ± 570910.511  ns/op
+mergeSortBenchmark               avgt  1000  127337463.000 ± 261402.273  ns/op
+mergeSortLessAloccBenchmark      avgt  1000  111652820.500 ± 400898.084  ns/op
+mergeSortThreadsBenchmark        avgt  1000   35102626.400 ± 245644.185  ns/op
+mergeSortThreadsDivideBenchmark  avgt  1000   34219496.000 ± 211575.166  ns/op
+referenceSortBenchmark           avgt  1000  110523245.000 ± 271390.674  ns/op
 
 Benchmark                        Mode   Cnt          Score        Error  Units
-mergeSortBenchmark               avgt  1000  130818612.977 ± 729811.076  ns/op
-mergeSortLessAloccBenchmark      avgt  1000  111388992.322 ± 556410.826  ns/op
-mergeSortThreadsBenchmark        avgt  1000   34016566.808 ± 273445.018  ns/op
-mergeSortThreadsDivideBenchmark  avgt  1000   39175946.606 ± 497280.066  ns/op
-referenceSortBenchmark           avgt  1000  112806591.695 ± 725552.210  ns/op
+mergeSortBenchmark               avgt  1000  130116473.400 ± 376602.844  ns/op
+mergeSortLessAloccBenchmark      avgt  1000  112814521.800 ± 198932.026  ns/op
+mergeSortThreadsBenchmark        avgt  1000   33785461.700 ± 223486.597  ns/op
+mergeSortThreadsDivideBenchmark  avgt  1000   35853804.700 ± 266996.669  ns/op
+referenceSortBenchmark           avgt  1000  108810988.500 ± 409202.967  ns/op
 
 Benchmark                        Mode   Cnt          Score        Error  Units
-mergeSortBenchmark               avgt  1000  127330820.500 ± 706250.487  ns/op
-mergeSortLessAloccBenchmark      avgt  1000  102627816.800 ± 499404.480  ns/op
-mergeSortThreadsBenchmark        avgt  1000   32482724.200 ± 235217.990  ns/op
-mergeSortThreadsDivideBenchmark  avgt  1000   36603837.200 ± 440842.554  ns/op
-referenceSortBenchmark           avgt  1000  107046644.300 ± 360859.299  ns/op
+mergeSortBenchmark               avgt  1000  127745105.900 ± 427768.248  ns/op
+mergeSortLessAloccBenchmark      avgt  1000  113471810.500 ± 285222.510  ns/op
+mergeSortThreadsBenchmark        avgt  1000   34118514.500 ± 238298.046  ns/op
+mergeSortThreadsDivideBenchmark  avgt  1000   34524225.100 ± 245869.563  ns/op
+referenceSortBenchmark           avgt  1000  108788176.400 ± 256899.231  ns/op
 
-Benchmark                        Mode   Cnt          Score         Error  Units
-mergeSortBenchmark               avgt  1000  133215991.400 ±  434278.211  ns/op
-mergeSortLessAloccBenchmark      avgt  1000  142056337.400 ± 2519889.782  ns/op
-mergeSortThreadsBenchmark        avgt  1000   40415380.200 ±  486907.348  ns/op
-mergeSortThreadsDivideBenchmark  avgt  1000   37659234.100 ±  501050.728  ns/op
-referenceSortBenchmark           avgt  1000  115814154.400 ± 1072425.428  ns/op
+Benchm                           Mode   Cnt          Score        Error  Units
+mergeSortBenchmark               avgt  1000  125987788.500 ± 377231.153  ns/op
+mergeSortLessAloccBenchmark      avgt  1000  109445564.300 ± 557755.163  ns/op
+mergeSortThreadsBenchmark        avgt  1000   33662827.900 ± 231020.123  ns/op
+mergeSortThreadsDivideBenchmark  avgt  1000   36055926.900 ± 333705.754  ns/op
+referenceSortBenchmark           avgt  1000  106100767.800 ± 708141.633  ns/op
 
-Benchmark                        Mode  Cnt          Score         Error  Units
-mergeSortBenchmark               avgt  100  137365199.000 ± 1004143.579  ns/op
-mergeSortLessAloccBenchmark      avgt  100  110966205.000 ± 2872022.781  ns/op
-mergeSortThreadsBenchmark        avgt  100   37218348.000 ±  784210.579  ns/op
-mergeSortThreadsDivideBenchmark  avgt  100   36348269.000 ±  679428.656  ns/op
-referenceSortBenchmark           avgt  100  110346311.000 ±  798324.186  ns/op
+Benchmark                        Mode   Cnt          Score        Error  Units
+mergeSortBenchmark               avgt  1000  125309254.200 ± 434331.902  ns/op
+mergeSortLessAloccBenchmark      avgt  1000  108928685.000 ± 273208.505  ns/op
+mergeSortThreadsBenchmark        avgt  1000   33541854.500 ± 245840.179  ns/op
+mergeSortThreadsDivideBenchmark  avgt  1000   33894834.100 ± 172906.242  ns/op
+referenceSortBenchmark           avgt  1000  106692850.600 ± 334179.873  ns/op
 
-Benchmark                        Mode   Cnt          Score         Error  Units
-mergeSortBenchmark               avgt  1000  130013928.300 ±  487404.614  ns/op
-mergeSortLessAloccBenchmark      avgt  1000  140628603.800 ± 1753668.390  ns/op
-mergeSortThreadsBenchmark        avgt  1000   38575911.500 ±  522652.633  ns/op
-mergeSortThreadsDivideBenchmark  avgt  1000   36347309.200 ±  278352.847  ns/op
-referenceSortBenchmark           avgt  1000  118965997.700 ±  799983.596  ns/op
+Older data sets
 
 With 1,000,000 integers
 Benchmark                        Mode   Cnt          Score         Error  Units
@@ -71,6 +66,13 @@ mergeSortThreadsBenchmark        avgt  1000  110186920.100 ± 1300136.237  ns/op
 mergeSortThreadsDivideBenchmark  avgt  1000  119201295.100 ±  998760.491  ns/op
 referenceSortBenchmark           avgt  1000  288060841.700 ± 2292112.813  ns/op
 
+Benchmark                        Mode   Cnt          Score         Error  Units
+mergeSortBenchmark               avgt  1000  285954939.200 ± 1043847.609  ns/op
+mergeSortLessAloccBenchmark      avgt  1000  290615794.200 ±  656579.977  ns/op
+mergeSortThreadsBenchmark        avgt  1000  102005139.300 ±  788844.818  ns/op
+mergeSortThreadsDivideBenchmark  avgt  1000  116357970.500 ±  873573.486  ns/op
+referenceSortBenchmark           avgt  1000  285944157.000 ± 2354186.081  ns/op
+
 With 100,000,000 integers
 Benchmark                        Mode  Cnt         Score         Error  Units
 mergeSortThreadsBenchmark        avgt   20  36544160.000 ± 1709375.720  ns/op
@@ -86,3 +88,60 @@ mergeSortThreadsDivideBenchmark          sample  500  38966067.200 ± 725147.033
 mergeSortThreadsDivideBenchmark·p0.00    sample       32014336.000               ns/op
 mergeSortThreadsDivideBenchmark·p0.50    sample       38207488.000               ns/op
 mergeSortThreadsDivideBenchmark·p0.90    sample       43968102.400               ns/op
+
+Benchmark                                                                                   Mode  Cnt          Score         Error  Units
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsBenchmark            avgt  400  223721030.778 ± 2851374.754  ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark      avgt  400  258820320.813 ± 2714623.932  ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark1     avgt  400  285389804.312 ± 3159131.363  ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark2     avgt  400  271974930.896 ± 3123130.281  ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmarkNeg1  avgt  400  250692269.708 ± 3478338.671  ns/op
+
+
+
+
+Benchmark                                                                                                                                 Mode  Cnt         Score        Error  Units
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsBenchmark                                                        sample  500  35630612.480 ± 417734.203  ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsBenchmark:mergeSortThreadsBenchmark·p0.00                        sample       29622272.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsBenchmark:mergeSortThreadsBenchmark·p0.50                        sample       35389440.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsBenchmark:mergeSortThreadsBenchmark·p0.90                        sample       39380582.400               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsBenchmark:mergeSortThreadsBenchmark·p0.95                        sample       40825651.200               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsBenchmark:mergeSortThreadsBenchmark·p0.99                        sample       44164055.040               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsBenchmark:mergeSortThreadsBenchmark·p0.999                       sample       46006272.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsBenchmark:mergeSortThreadsBenchmark·p0.9999                      sample       46006272.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsBenchmark:mergeSortThreadsBenchmark·p1.00                        sample       46006272.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark                                                  sample  500  35458973.696 ± 333582.196  ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark:mergeSortThreadsDivideBenchmark·p0.00            sample       30965760.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark:mergeSortThreadsDivideBenchmark·p0.50            sample       35127296.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark:mergeSortThreadsDivideBenchmark·p0.90            sample       38397542.400               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark:mergeSortThreadsDivideBenchmark·p0.95            sample       39256064.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark:mergeSortThreadsDivideBenchmark·p0.99            sample       42530897.920               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark:mergeSortThreadsDivideBenchmark·p0.999           sample       44957696.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark:mergeSortThreadsDivideBenchmark·p0.9999          sample       44957696.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark:mergeSortThreadsDivideBenchmark·p1.00            sample       44957696.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark1                                                 sample  500  35085484.032 ± 353502.948  ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark1:mergeSortThreadsDivideBenchmark1·p0.00          sample       29360128.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark1:mergeSortThreadsDivideBenchmark1·p0.50          sample       34799616.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark1:mergeSortThreadsDivideBenchmark1·p0.90          sample       38397542.400               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark1:mergeSortThreadsDivideBenchmark1·p0.95          sample       39577190.400               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark1:mergeSortThreadsDivideBenchmark1·p0.99          sample       41870295.040               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark1:mergeSortThreadsDivideBenchmark1·p0.999         sample       44040192.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark1:mergeSortThreadsDivideBenchmark1·p0.9999        sample       44040192.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark1:mergeSortThreadsDivideBenchmark1·p1.00          sample       44040192.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark2                                                 sample  500  35380002.816 ± 417072.386  ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark2:mergeSortThreadsDivideBenchmark2·p0.00          sample       28901376.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark2:mergeSortThreadsDivideBenchmark2·p0.50          sample       35127296.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark2:mergeSortThreadsDivideBenchmark2·p0.90          sample       38987366.400               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark2:mergeSortThreadsDivideBenchmark2·p0.95          sample       40760115.200               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark2:mergeSortThreadsDivideBenchmark2·p0.99          sample       44429475.840               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark2:mergeSortThreadsDivideBenchmark2·p0.999         sample       45350912.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark2:mergeSortThreadsDivideBenchmark2·p0.9999        sample       45350912.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmark2:mergeSortThreadsDivideBenchmark2·p1.00          sample       45350912.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmarkNeg1                                              sample  500  36015636.480 ± 685588.005  ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmarkNeg1:mergeSortThreadsDivideBenchmarkNeg1·p0.00    sample       29229056.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmarkNeg1:mergeSortThreadsDivideBenchmarkNeg1·p0.50    sample       35389440.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmarkNeg1:mergeSortThreadsDivideBenchmarkNeg1·p0.90    sample       39367475.200               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmarkNeg1:mergeSortThreadsDivideBenchmarkNeg1·p0.95    sample       40828928.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmarkNeg1:mergeSortThreadsDivideBenchmarkNeg1·p0.99    sample       61802414.080               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmarkNeg1:mergeSortThreadsDivideBenchmarkNeg1·p0.999   sample       79167488.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmarkNeg1:mergeSortThreadsDivideBenchmarkNeg1·p0.9999  sample       79167488.000               ns/op
+SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmarkNeg1:mergeSortThreadsDivideBenchmarkNeg1·p1.00    sample       79167488.000               ns/op
