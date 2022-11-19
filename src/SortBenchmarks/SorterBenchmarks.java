@@ -17,10 +17,10 @@ import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-@Fork(value = 5)
+@Fork(value = 2)
 @Warmup(iterations = 5)
-@Measurement(iterations = 200, timeUnit = TimeUnit.NANOSECONDS, time = 1)
-//@Fork(value = 3)
+@Measurement(iterations = 500, timeUnit = TimeUnit.NANOSECONDS, time = 1)
+//@Fork(value = 1)
 //@Warmup(iterations = 0)
 //@Measurement(iterations = 1, timeUnit = TimeUnit.NANOSECONDS, time = 1)
 public class SorterBenchmarks {
@@ -34,40 +34,42 @@ public class SorterBenchmarks {
      * Each fork has a different seed.
      */
     public static void main(String[] args) throws Exception {
-        File seedFile = new File(seedPath);
-        if (seedFile.exists()) {
-            if (!seedFile.delete()) {
-                throw new Exception("Problem deleting file!");
+        for (int f = 0; f < 5; f++) {
+            File seedFile = new File(seedPath);
+            if (seedFile.exists()) {
+                if (!seedFile.delete()) {
+                    throw new Exception("Problem deleting file!");
+                }
             }
-        }
-        if (!seedFile.createNewFile()) {
-            throw new Exception("Problem creating file!");
-        }
-        File forkFile = new File(forkIndexPath);
-        if (forkFile.exists()) {
-            if (!forkFile.delete()) {
-                throw new Exception("Problem deleting file!");
+            if (!seedFile.createNewFile()) {
+                throw new Exception("Problem creating file!");
             }
-        }
-        if (!forkFile.createNewFile()) {
-            throw new Exception("Problem creating file!");
-        }
-        FileWriter writer = new FileWriter(seedFile);
-        for (int i = 0; i <= forks; i++) {
-            writer.write(new Random().nextInt() + " ");
-        }
-        writer.close();
-        FileWriter forkWriter = new FileWriter(forkFile);
-        forkWriter.write(0 + "");
-        forkWriter.close();
-        new Runner(new OptionsBuilder()
-                .exclude(SpecificMergeSortThreadSorterBenchmarks.class.getSimpleName())
-                .exclude(MergeSortThreadsDivideBenchmarks.class.getSimpleName())
-                .include(SorterBenchmarks.class.getSimpleName())
-                .build()).run();
+            File forkFile = new File(forkIndexPath);
+            if (forkFile.exists()) {
+                if (!forkFile.delete()) {
+                    throw new Exception("Problem deleting file!");
+                }
+            }
+            if (!forkFile.createNewFile()) {
+                throw new Exception("Problem creating file!");
+            }
+            FileWriter writer = new FileWriter(seedFile);
+            for (int i = 0; i <= forks; i++) {
+                writer.write(new Random().nextInt() + " ");
+            }
+            writer.close();
+            FileWriter forkWriter = new FileWriter(forkFile);
+            forkWriter.write(0 + "");
+            forkWriter.close();
+            new Runner(new OptionsBuilder()
+                    .exclude(SpecificMergeSortThreadSorterBenchmarks.class.getSimpleName())
+                    .exclude(MergeSortThreadsDivideBenchmarks.class.getSimpleName())
+                    .include(SorterBenchmarks.class.getSimpleName())
+                    .build()).run();
 
-        seedFile.delete();
-        forkFile.delete();
+            seedFile.delete();
+            forkFile.delete();
+        }
     }
 
     @State(Scope.Benchmark)
@@ -103,9 +105,8 @@ public class SorterBenchmarks {
         }
 
         static <E extends Comparable<? super E>> E[] getRandomArray(int seed) {
-            System.out.println(seed);
             Random random = new Random(seed);
-            Integer[] integers = new Integer[1000000];
+            Integer[] integers = new Integer[500000];
             for (int i = 0; i < integers.length; i++) {
                 integers[i] = random.nextInt();
             }
