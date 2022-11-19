@@ -231,4 +231,4 @@ not on the same array.
 **Oskar Niesen** <<oskar-github@niesens.com>> (he/him)
 
 ## License
-The project is not yet licensed.
+MergeSortThreads is licensed under [MIT](https://github.com/tuvus/MergeSortThreads/blob/master/LICENSE.md).
