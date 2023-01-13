@@ -2,6 +2,7 @@ package SortBenchmarks;
 
 import MergeSortThreads.MergeSortThreads;
 import MergeSortThreads.MergeSortThreadsDivide;
+import MergeSortThreads.MergeSortThreadsDivideOneArray;
 import OtherSorters.MergeSort;
 import OtherSorters.MergeSortLessAlocc;
 import org.openjdk.jmh.annotations.*;
@@ -112,6 +113,13 @@ public class SorterBenchmarks {
             }
             return (E[]) integers;
         }
+    }
+
+    @Benchmark
+    public void mergeSortThreadsDivideOneArrayBenchmark(SorterState sorterState) {
+        MergeSortThreadsDivideOneArray<Integer> mergeSortThreadsDivideOneArray = new MergeSortThreadsDivideOneArray<>(sorterState.copy);
+        mergeSortThreadsDivideOneArray.start();
+        mergeSortThreadsDivideOneArray.complete();
     }
 
     @Benchmark
