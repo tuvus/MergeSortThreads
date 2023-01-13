@@ -1,9 +1,12 @@
 package MergeSortThreads;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * This version of MergeSortThreadsDivide uses only one array that is twice as long.
+ * As long as the array we need to sort is half int.MaxValue, it should be able to work.
  *
  * @param <E>
  */
@@ -37,11 +40,11 @@ public class MergeSortThreadsDivideOneArray<E extends Comparable<? super E>> {
      */
     public MergeSortThreadsDivideOneArray(E[] array, int threadCount) {
         this.array = array;
-        this.sortingArray = array.clone();
+        this.sortingArray = Arrays.copyOf(array, array.length * 2);
+        System.arraycopy(array, 0, sortingArray, array.length, array.length);
         completed = false;
         setupSections(threadCount);
     }
-
 
     /**
      * Divides the array into sections.
@@ -54,7 +57,7 @@ public class MergeSortThreadsDivideOneArray<E extends Comparable<? super E>> {
         int size = array.length / threadCount;
         int remainder = array.length % threadCount;
 
-        boolean outputArray = threadCount % 2 == 1;
+        boolean leftOrRightArray = threadCount % 2 == 1;
         boolean even = threadCount % 2 == 0;
         int lowerIndex = 0;
         int upperIndex = size - 1;
@@ -67,8 +70,8 @@ public class MergeSortThreadsDivideOneArray<E extends Comparable<? super E>> {
             upperIndex = Math.min(array.length - 1, lowerIndex + size - 1);
             if (i < remainder)
                 upperIndex++;
-            sections.add(new SortSection(i, lowerIndex, upperIndex, !outputArray, new MergeSortThread()));
-            outputArray = !outputArray;
+            sections.add(new SortSection(i, lowerIndex, upperIndex, !leftOrRightArray, new MergeSortThread()));
+            leftOrRightArray = !leftOrRightArray;
             sections.get(i).mergeSortThread.section = sections.get(i);
         }
         sections.add(new SortSection(threadCount - 1, upperIndex + 1, array.length - 1, !even, new MergeSortThread()));
@@ -141,6 +144,8 @@ public class MergeSortThreadsDivideOneArray<E extends Comparable<? super E>> {
     /**
      * A container holding the range of the section, the thread to initially sort the section
      * weather it is sorted or not, and which sections are in its chain.
+     * Each section has two ranges associated with them, one from lowerIndex to upperIndex.
+     * The other is from lowerIndex + array.length to upperIndex + array.length.
      * Sections can be chained together to create parts of the array that are sorted and broken up in location.
      */
     private class SortSection {
@@ -148,20 +153,20 @@ public class MergeSortThreadsDivideOneArray<E extends Comparable<? super E>> {
         //Points to the next section in the part of the sorted section chain
         public SortSection merged;
         public boolean sorted;
-        //True if the sorted array is on the array
-        //False if the sorted array is on the sortingArray
-        public boolean outputArray;
+        //True if the sorted array is on the left side of the array
+        //False if the sorted array is on the right side of the array
+        public boolean leftOrRightArray;
         //How many sections are in the chain
         public int sectionLength;
         public int lowerIndex;
         public int upperIndex;
         public MergeSortThread mergeSortThread;
 
-        public SortSection(int sectionIndex, int lowerIndex, int upperIndex, boolean outputArray, MergeSortThread mergeSortThread) {
+        public SortSection(int sectionIndex, int lowerIndex, int upperIndex, boolean leftOrRightArray, MergeSortThread mergeSortThread) {
             this.sectionIndex = sectionIndex;
             this.lowerIndex = lowerIndex;
             this.upperIndex = upperIndex;
-            this.outputArray = outputArray;
+            this.leftOrRightArray = leftOrRightArray;
             this.mergeSortThread = mergeSortThread;
             this.sorted = false;
             this.merged = null;
@@ -186,7 +191,7 @@ public class MergeSortThreadsDivideOneArray<E extends Comparable<? super E>> {
         for (int i = 0; i < sections.size(); i++) {
             if (i == sectionIndex)
                 continue;
-            if (sections.get(i).sorted && sections.get(i).outputArray) {
+            if (sections.get(i).sorted && sections.get(i).leftOrRightArray) {
                 sections.get(i).sorted = false;
                 return i;
             }
@@ -212,7 +217,7 @@ public class MergeSortThreadsDivideOneArray<E extends Comparable<? super E>> {
         for (int i = 0; i < sections.size(); i++) {
             if (i == sectionIndex)
                 continue;
-            if (sections.get(i).sorted && !sections.get(i).outputArray) {
+            if (sections.get(i).sorted && !sections.get(i).leftOrRightArray) {
                 sections.get(i).sorted = false;
                 return i;
             }
@@ -231,154 +236,158 @@ public class MergeSortThreadsDivideOneArray<E extends Comparable<? super E>> {
          * Sorts its own individual section then looks for sections to merge with.
          * If it does not find any sections it will return.
          * If it is the last thread running it will set the MergeSortThreadsDivide as sorted
-         * section.outputArray needs to be inverted each time the section is sorted again.
+         * section.leftOrRightArray needs to be inverted each time the section is sorted again.
          */
         @Override
         public void run() {
             //Merge the individual section
-            if (section.outputArray)
-                mergeSortRec(array, sortingArray, section.lowerIndex, section.upperIndex);
-            else
-                mergeSortRec(sortingArray, array, section.lowerIndex, section.upperIndex);
-            section.outputArray = !section.outputArray;
+            mergeSortRec(section.leftOrRightArray, section.lowerIndex, section.upperIndex);
+            section.leftOrRightArray = !section.leftOrRightArray;
 
             //Merges with eligible sections until sorting is complete
             //or there aren't any more eligible sections to merge with
             int mergeTargetIndex = -1;
-            if (section.outputArray)
+            if (section.leftOrRightArray)
                 mergeTargetIndex = getNewTrueSectionToMergeInto(section.sectionIndex);
             else
                 mergeTargetIndex = getNewFalseSectionToMergeInto(section.sectionIndex);
             while (mergeTargetIndex != -1) {
                 //Merge the sections
-                if (section.outputArray)
-                    section = mergeSections(array, sortingArray, section, sections.get(mergeTargetIndex));
-                else
-                    section = mergeSections(sortingArray, array, section, sections.get(mergeTargetIndex));
-                section.outputArray = !section.outputArray;
+                section = mergeSections(section.leftOrRightArray, section, sections.get(mergeTargetIndex));
+                section.leftOrRightArray = !section.leftOrRightArray;
 
                 //Check for if a new section is eligible to merge with
-                if (section.outputArray)
+                if (section.leftOrRightArray)
                     mergeTargetIndex = getNewTrueSectionToMergeInto(section.sectionIndex);
                 else
                     mergeTargetIndex = getNewFalseSectionToMergeInto(section.sectionIndex);
             }
             //The sorting is complete
-            if (section.sectionLength == sections.size())
+            if (section.sectionLength == sections.size()) {
+                System.arraycopy(sortingArray, 0, array, 0, array.length);
                 completed = true;
+            }
         }
-    }
 
-    /**
-     * MergeSorts the two SortSections chains together into a single SortSection chain.
-     * The SortSection in the chain are order by their index.
-     * Returns the SortSection at the begging of the chain.
-     *
-     * @param output   the array to sort to
-     * @param input    the array with the half sorted values
-     * @param section1 the first section chain
-     * @param section2 the second section chain
-     * @return a new sorted SortSection chain
-     */
-    private SortSection mergeSections(E[] output, E[] input, SortSection section1, SortSection section2) {
-        //Set up the new newSectionOrder, indices pointing towards the output SortSection chain
-        int[] newSectionOrder = new int[section1.sectionLength + section2.sectionLength];
-        getSectionOrder(newSectionOrder, section1, section2);
-        int newSectionOrderIndex = 0;
+        /**
+         * MergeSorts the two SortSections chains together into a single SortSection chain.
+         * The SortSection in the chain are order by their index.
+         * Returns the SortSection at the begging of the chain.
+         *
+         * @param leftOrRight which array the sorted array should be on
+         * @param section1    the first section chain
+         * @param section2    the second section chain
+         * @return a new sorted SortSection chain
+         */
+        private SortSection mergeSections(boolean leftOrRight, SortSection section1, SortSection section2) {
+            //Set up the new newSectionOrder, indices pointing towards the output SortSection chain
+            int[] newSectionOrder = new int[section1.sectionLength + section2.sectionLength];
+            getSectionOrder(newSectionOrder, section1, section2);
+            int newSectionOrderIndex = 0;
 
-        //The indices of the two objects to compare
-        int lhs = section1.lowerIndex, rhs = section2.lowerIndex;
-        //The index at the output array to sortingArray the values to
-        int index = sections.get(newSectionOrder[newSectionOrderIndex]).lowerIndex;
+            //Add section.lowerIndex and section.upperIndex by offset to get the real input section range
+            int offset = 0;
+            //Add section.lowerIndex and section.upperIndex by offset to get the real output section range
+            int reverseOffset = array.length;
+            if (leftOrRight) {
+                offset = array.length;
+                reverseOffset = 0;
+            }
+            //The indices of the two objects to compare
+            int lhs = section1.lowerIndex + offset, rhs = section2.lowerIndex + offset;
 
-        //Compares the two sections and copies the lower one to the output array
-        //until one of the SortSection chains has no more elements
-        while (lhs <= section1.upperIndex && rhs <= section2.upperIndex) {
-            if ((input[lhs]).compareTo(input[rhs]) <= 0) {
-                //Add the left object to the output array
-                output[index] = input[lhs];
-                lhs++;
-                if (lhs > section1.upperIndex && section1.merged != null) {
-                    //Move to the next section of the section chain
-                    section1 = section1.merged;
-                    lhs = section1.lowerIndex;
+            //The index at the output array to sortingArray the values to
+            int index = sections.get(newSectionOrder[newSectionOrderIndex]).lowerIndex + reverseOffset;
+
+            //Compares the two sections and copies the lower one to the output array
+            //until one of the SortSection chains has no more elements
+            while (lhs <= section1.upperIndex && rhs <= section2.upperIndex) {
+                if ((sortingArray[lhs]).compareTo(sortingArray[rhs]) <= 0) {
+                    //Add the left object to the output array
+                    sortingArray[index] = sortingArray[lhs];
+                    lhs++;
+                    if (lhs > section1.upperIndex + offset && section1.merged != null) {
+                        //Move to the next section of the section chain
+                        section1 = section1.merged;
+                        lhs = section1.lowerIndex + offset;
+                    }
+                } else {
+                    //Add the right object to the output array
+                    sortingArray[index] = sortingArray[rhs];
+                    rhs++;
+                    if (rhs > section2.upperIndex + offset && section2.merged != null) {
+                        //Move to the next section of the section chain
+                        section2 = section2.merged;
+                        rhs = section2.lowerIndex + offset;
+                    }
+                }
+
+                //Update the output array index
+                index++;
+                if (index > sections.get(newSectionOrder[newSectionOrderIndex]).upperIndex + reverseOffset) {
+                    //Move to the next target section in the output section chain
+                    newSectionOrderIndex++;
+                    index = sections.get(newSectionOrder[newSectionOrderIndex]).lowerIndex + reverseOffset;
+                }
+            }
+            //sortingArray the rest of the values to the output array
+            if (lhs <= section1.upperIndex + offset) {
+                while (true) {
+                    //Copies the values from the input section to the output section
+                    //Increments through the input and output sections when they run out of values
+                    int length = Math.min(section1.upperIndex - lhs + 1, sections.get(newSectionOrder[newSectionOrderIndex]).upperIndex - index + 1);
+                    System.arraycopy(sortingArray, lhs, sortingArray, index, length);
+                    index += length;
+                    lhs += length;
+                    if (lhs > section1.upperIndex + offset) {
+                        //Move to the next target section in the input section chain
+                        if (section1.merged != null) {
+                            section1 = section1.merged;
+                            lhs = section1.lowerIndex + offset;
+                        } else {
+                            break;
+                        }
+                    }
+                    if (index > sections.get(newSectionOrder[newSectionOrderIndex]).upperIndex + reverseOffset) {
+                        //Move to the next target section in the output section chain
+                        newSectionOrderIndex++;
+                        index = sections.get(newSectionOrder[newSectionOrderIndex]).lowerIndex + reverseOffset;
+                    }
                 }
             } else {
-                //Add the right object to the output array
-                output[index] = input[rhs];
-                rhs++;
-                if (rhs > section2.upperIndex && section2.merged != null) {
-                    //Move to the next section of the section chain
-                    section2 = section2.merged;
-                    rhs = section2.lowerIndex;
-                }
-            }
-
-            //Update the output array index
-            index++;
-            if (index > sections.get(newSectionOrder[newSectionOrderIndex]).upperIndex) {
-                //Move to the next target section in the output section chain
-                newSectionOrderIndex++;
-                index = sections.get(newSectionOrder[newSectionOrderIndex]).lowerIndex;
-            }
-        }
-        //sortingArray the rest of the values to the output array
-        if (lhs <= section1.upperIndex) {
-            while (true) {
-                //Copies the values from the input section to the output section
-                //Increments through the input and output sections when they run out of values
-                int length = Math.min(section1.upperIndex - lhs + 1, sections.get(newSectionOrder[newSectionOrderIndex]).upperIndex - index + 1);
-                System.arraycopy(input, lhs, output, index, length);
-                index += length;
-                lhs += length;
-                if (lhs > section1.upperIndex) {
-                    //Move to the next target section in the input section chain
-                    if (section1.merged != null) {
-                        section1 = section1.merged;
-                        lhs = section1.lowerIndex;
-                    } else {
-                        break;
+                while (true) {
+                    //Copies the values from the input section to the output section
+                    //Increments through the input and output sections when they run out of values
+                    int length = Math.min(section2.upperIndex - rhs + 1, sections.get(newSectionOrder[newSectionOrderIndex]).upperIndex - index + 1);
+                    System.arraycopy(sortingArray, rhs, sortingArray, index, length);
+                    index += length;
+                    rhs += length;
+                    if (rhs > section2.upperIndex + offset) {
+                        //Move to the next target section in the input section chain
+                        if (section2.merged != null) {
+                            section2 = section2.merged;
+                            rhs = section2.lowerIndex + offset;
+                        } else {
+                            break;
+                        }
+                    }
+                    if (index > sections.get(newSectionOrder[newSectionOrderIndex]).upperIndex + reverseOffset) {
+                        //Move to the next target section in the output section chain
+                        newSectionOrderIndex++;
+                        index = sections.get(newSectionOrder[newSectionOrderIndex]).lowerIndex + reverseOffset;
                     }
                 }
-                if (index > sections.get(newSectionOrder[newSectionOrderIndex]).upperIndex) {
-                    //Move to the next target section in the output section chain
-                    newSectionOrderIndex++;
-                    index = sections.get(newSectionOrder[newSectionOrderIndex]).lowerIndex;
-                }
             }
-        } else {
-            while (true) {
-                //Copies the values from the input section to the output section
-                //Increments through the input and output sections when they run out of values
-                int length = Math.min(section2.upperIndex - rhs + 1, sections.get(newSectionOrder[newSectionOrderIndex]).upperIndex - index + 1);
-                System.arraycopy(input, rhs, output, index, length);
-                index += length;
-                rhs += length;
-                if (rhs > section2.upperIndex) {
-                    //Move to the next target section in the input section chain
-                    if (section2.merged != null) {
-                        section2 = section2.merged;
-                        rhs = section2.lowerIndex;
-                    } else {
-                        break;
-                    }
-                }
-                if (index > sections.get(newSectionOrder[newSectionOrderIndex]).upperIndex) {
-                    //Move to the next target section in the output section chain
-                    newSectionOrderIndex++;
-                    index = sections.get(newSectionOrder[newSectionOrderIndex]).lowerIndex;
-                }
+            //Sets up the new SortSection chain
+            for (int i = 0; i < newSectionOrder.length; i++) {
+                if (i == newSectionOrder.length - 1)
+                    sections.get(newSectionOrder[i]).merged = null;
+                else
+                    sections.get(newSectionOrder[i]).merged = sections.get(newSectionOrder[i + 1]);
             }
+            sections.get(newSectionOrder[0]).sectionLength = newSectionOrder.length;
+            return sections.get(newSectionOrder[0]);
         }
-        //Sets up the new SortSection chain
-        for (int i = 0; i < newSectionOrder.length; i++) {
-            if (i == newSectionOrder.length - 1)
-                sections.get(newSectionOrder[i]).merged = null;
-            else
-                sections.get(newSectionOrder[i]).merged = sections.get(newSectionOrder[i + 1]);
-        }
-        sections.get(newSectionOrder[0]).sectionLength = newSectionOrder.length;
-        return sections.get(newSectionOrder[0]);
     }
 
     /**
@@ -403,46 +412,50 @@ public class MergeSortThreadsDivideOneArray<E extends Comparable<? super E>> {
     /**
      * Recursively sorts the individual section alternating what arrays are the output and sortingArray.
      *
-     * @param output the array that should be sorted at between the indices given
-     * @param input  the array with the given values
-     * @param lower  the lower index to be sorted
-     * @param upper  the upper index to be sorted
+     * @param leftOrRight which array the sorted array should be on
+     * @param lower       the lower index to be sorted
+     * @param upper       the upper index to be sorted
      */
-    private void mergeSortRec(E[] output, E[] input, int lower, int upper) {
+    private void mergeSortRec(boolean leftOrRight, int lower, int upper) {
         if (upper - lower <= 0)
             return;
-        mergeSortRec(input, output, lower, lower + ((upper - lower) / 2));
-        mergeSortRec(input, output, lower + ((upper - lower) / 2) + 1, upper);
-        merge(output, input, lower, lower + ((upper - lower) / 2), lower + ((upper - lower) / 2) + 1, upper);
+        mergeSortRec(!leftOrRight, lower, lower + ((upper - lower) / 2));
+        mergeSortRec(!leftOrRight, lower + ((upper - lower) / 2) + 1, upper);
+        int offset = 0;
+        if (leftOrRight)
+            offset = array.length;
+        merge(leftOrRight, lower + offset, lower + ((upper - lower) / 2) + offset, lower + ((upper - lower) / 2) + 1 + offset, upper + offset);
     }
 
     /**
      * Merges the two parts of the array together in sorted order
      *
-     * @param output the array that should end up sorted
-     * @param input  the half sorted array with the values to sort
-     * @param lower  the lower index to be sorted of the first part
-     * @param upper  the upper index to be sorted of the first part
-     * @param lower2 the lower index to be sorted of the second part
-     * @param upper2 the upper index to be sorted of the second part
+     * @param leftOrRight which array the sorted array should be on
+     *                    the lower and upper sections should be on the other half of the array
+     * @param lower       the lower index to be sorted of the first part
+     * @param upper       the upper index to be sorted of the first part
+     * @param lower2      the lower index to be sorted of the second part
+     * @param upper2      the upper index to be sorted of the second part
      */
-    private void merge(E[] output, E[] input, int lower, int upper, int lower2, int upper2) {
+    private void merge(boolean leftOrRight, int lower, int upper, int lower2, int upper2) {
         int lhs = lower, rhs = lower2;
         int index = lower;
+        if (!leftOrRight)
+            index += array.length;
         while (lhs <= upper && rhs <= upper2) {
-            if ((input[lhs]).compareTo(input[rhs]) <= 0) {
-                output[index] = input[lhs];
+            if ((sortingArray[lhs]).compareTo(sortingArray[rhs]) <= 0) {
+                sortingArray[index] = sortingArray[lhs];
                 lhs++;
             } else {
-                output[index] = input[rhs];
+                sortingArray[index] = sortingArray[rhs];
                 rhs++;
             }
             index++;
         }
         if (lhs > upper) {
-            System.arraycopy(input, rhs, output, index, upper2 - index + 1);
+            System.arraycopy(sortingArray, rhs, sortingArray, index, upper2 - index + 1);
         } else {
-            System.arraycopy(input, lhs, output, index, upper2 - index + 1);
+            System.arraycopy(sortingArray, lhs, sortingArray, index, upper2 - index + 1);
         }
     }
 }
