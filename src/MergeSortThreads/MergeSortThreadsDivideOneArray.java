@@ -301,7 +301,7 @@ public class MergeSortThreadsDivideOneArray<E extends Comparable<? super E>> {
 
             //Compares the two sections and copies the lower one to the output array
             //until one of the SortSection chains has no more elements
-            while (lhs <= section1.upperIndex && rhs <= section2.upperIndex) {
+            while (lhs <= section1.upperIndex + offset && rhs <= section2.upperIndex + offset) {
                 if ((sortingArray[lhs]).compareTo(sortingArray[rhs]) <= 0) {
                     //Add the left object to the output array
                     sortingArray[index] = sortingArray[lhs];
@@ -439,9 +439,9 @@ public class MergeSortThreadsDivideOneArray<E extends Comparable<? super E>> {
      */
     private void merge(boolean leftOrRight, int lower, int upper, int lower2, int upper2) {
         int lhs = lower, rhs = lower2;
-        int offset = 0;
-        if (!leftOrRight)
-            offset = array.length;
+        int offset = array.length;
+        if (leftOrRight)
+            offset = -array.length;
         int index = lower + offset;
         while (lhs <= upper && rhs <= upper2) {
             if ((sortingArray[lhs]).compareTo(sortingArray[rhs]) <= 0) {
