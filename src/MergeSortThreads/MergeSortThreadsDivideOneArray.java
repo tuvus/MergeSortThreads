@@ -335,7 +335,7 @@ public class MergeSortThreadsDivideOneArray<E extends Comparable<? super E>> {
                 while (true) {
                     //Copies the values from the input section to the output section
                     //Increments through the input and output sections when they run out of values
-                    int length = Math.min(section1.upperIndex - lhs + 1, sections.get(newSectionOrder[newSectionOrderIndex]).upperIndex - index + 1);
+                    int length = Math.min(section1.upperIndex - lhs + 1 + offset, sections.get(newSectionOrder[newSectionOrderIndex]).upperIndex - index + 1 + reverseOffset);
                     System.arraycopy(sortingArray, lhs, sortingArray, index, length);
                     index += length;
                     lhs += length;
@@ -358,7 +358,7 @@ public class MergeSortThreadsDivideOneArray<E extends Comparable<? super E>> {
                 while (true) {
                     //Copies the values from the input section to the output section
                     //Increments through the input and output sections when they run out of values
-                    int length = Math.min(section2.upperIndex - rhs + 1, sections.get(newSectionOrder[newSectionOrderIndex]).upperIndex - index + 1);
+                    int length = Math.min(section2.upperIndex - rhs + 1 + offset, sections.get(newSectionOrder[newSectionOrderIndex]).upperIndex - index + 1 + reverseOffset);
                     System.arraycopy(sortingArray, rhs, sortingArray, index, length);
                     index += length;
                     rhs += length;
@@ -439,9 +439,10 @@ public class MergeSortThreadsDivideOneArray<E extends Comparable<? super E>> {
      */
     private void merge(boolean leftOrRight, int lower, int upper, int lower2, int upper2) {
         int lhs = lower, rhs = lower2;
-        int index = lower;
+        int offset = 0;
         if (!leftOrRight)
-            index += array.length;
+            offset = array.length;
+        int index = lower + offset;
         while (lhs <= upper && rhs <= upper2) {
             if ((sortingArray[lhs]).compareTo(sortingArray[rhs]) <= 0) {
                 sortingArray[index] = sortingArray[lhs];
@@ -453,9 +454,9 @@ public class MergeSortThreadsDivideOneArray<E extends Comparable<? super E>> {
             index++;
         }
         if (lhs > upper) {
-            System.arraycopy(sortingArray, rhs, sortingArray, index, upper2 - index + 1);
+            System.arraycopy(sortingArray, rhs, sortingArray, index, upper2 - index + 1 + offset);
         } else {
-            System.arraycopy(sortingArray, lhs, sortingArray, index, upper2 - index + 1);
+            System.arraycopy(sortingArray, lhs, sortingArray, index, upper2 - index + 1 + offset);
         }
     }
 }
