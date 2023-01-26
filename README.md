@@ -172,6 +172,24 @@ is more volatile.
 Making it more likely that a thread will merge with another section instead of waiting for its adjacent section.
 
 
+#### What happens if we have one twice as large array? MergeSortThreadsDivideOneArray
+While preforming Mergesort, the sorting needs to be put in another space at least the size of the original unsorted section.
+Usually another array is created and sorting is done between the original and the copy.
+But would it be faster if we had an array that was twice the size of the original and sorted only on that array.
+The array would be divided into a left and a right section instead of alternating between two arrays.
+
+This version of MergeSort tests if the processors have any inefficiencies with jumping around from array to array,
+and tries to solve them by storing them in one array instead of two.
+
+#### Time efficiency conclusion
+There wasn't any benefit to the time efficiency, although the sort could be improved more this test.
+It is also important to take into account that the two arrays in mergeSortThreads where created in a relatively
+simple environment and their location in memory is already very close to each other.
+If there is a negative impact from the distance of the arrays in memory these tests would not have fully captured it.
+
+Results with sorting 500,000 integers with 11 processors (the main thread was not doing any work):
+* The mergeSortThreadsDivideOneArray algorithm takes anywhere from 145.56%
+  to 137.28% as long as mergeSortThreadsDivide.
 ---
 ### Benchmark Data
 In SortBenchmarks/BenchmarkResults.txt is the data used for each of the time efficiency percentages with an 
@@ -195,7 +213,11 @@ array of random integers and 11 free logical processors.
     mergeSortThreadsDivideBenchmark18    avgt  400  271974930.896 ± 3123130.281  ns/op
     mergeSortThreadsDivideBenchmarkNeg15 avgt  400  250692269.708 ± 3478338.671  ns/op
 
+    Benchmark                                Mode   Cnt         Score        Error  Units
+    mergeSortThreadsDivideBenchmark          avgt  1000  36016176.400 ± 477750.032  ns/op
+    mergeSortThreadsDivideOneArrayBenchmark  avgt  1000  50938524.000 ± 839397.484  ns/op
 ---
+
 ### Conclusion
 The traditional way the Mergesort algorithm partitions arrays into two halves is inefficient, 
 but allows for some simple improvements to be made.
@@ -217,6 +239,9 @@ In theory if the computer would be using all of its processors 100% efficiently
 it would be better to sort the array a single thread.
 However, with most programs being run on only one thread the decrease in time the main thread has to wait outweighs
 the extra cost.
+
+Another interesting idea to create one array that is twice as large did not reduce the sorting time.
+However, the experiment does provide extra insight into how the memory works.
 
 For future research a new MergeSortThreadsDivide class should be made without the chaining feature to see if 
 performance can be farther improved.

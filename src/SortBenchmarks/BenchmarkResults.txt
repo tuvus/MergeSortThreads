@@ -20,7 +20,7 @@ mergeSortThreadsBenchmark        avgt  1000   34118514.500 ± 238298.046  ns/op
 mergeSortThreadsDivideBenchmark  avgt  1000   34524225.100 ± 245869.563  ns/op
 referenceSortBenchmark           avgt  1000  108788176.400 ± 256899.231  ns/op
 
-Benchm                           Mode   Cnt          Score        Error  Units
+Benchmark                        Mode   Cnt          Score        Error  Units
 mergeSortBenchmark               avgt  1000  125987788.500 ± 377231.153  ns/op
 mergeSortLessAloccBenchmark      avgt  1000  109445564.300 ± 557755.163  ns/op
 mergeSortThreadsBenchmark        avgt  1000   33662827.900 ± 231020.123  ns/op
@@ -145,3 +145,8 @@ SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBen
 SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmarkNeg1:mergeSortThreadsDivideBenchmarkNeg1·p0.999   sample       79167488.000               ns/op
 SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmarkNeg1:mergeSortThreadsDivideBenchmarkNeg1·p0.9999  sample       79167488.000               ns/op
 SortBenchmarks.SpecificMergeSortThreadSorterBenchmarks.mergeSortThreadsDivideBenchmarkNeg1:mergeSortThreadsDivideBenchmarkNeg1·p1.00    sample       79167488.000               ns/op
+
+Testing one array against two with 500000 Integers
+Benchmark                                Mode   Cnt         Score        Error  Units
+mergeSortThreadsDivideBenchmark          avgt  1000  36016176.400 ± 477750.032  ns/op
+mergeSortThreadsDivideOneArrayBenchmark  avgt  1000  50938524.000 ± 839397.484  ns/op
