@@ -1,5 +1,7 @@
-package OtherSorters;
+package Tests;
 
+import OtherSorters.MergeSort;
+import OtherSorters.MergeSortLessAlocc;
 import SortBenchmarks.SorterBenchmarks;
 import org.junit.Assert;
 import org.junit.Test;

@@ -1,5 +1,6 @@
-package MergeSortThreads;
+package Tests;
 
+import MergeSortThreads.MergeSortThreadsDivideOneArray;
 import org.junit.Assert;
 import org.junit.Test;
 

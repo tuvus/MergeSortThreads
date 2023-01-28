@@ -1,4 +1,4 @@
-package MergeSortThreadsDivideReference;
+package OtherSorters;
 
 import java.util.ArrayList;
 import java.util.Arrays;
