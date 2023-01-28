@@ -1,17 +1,11 @@
 package SortBenchmarks;
 
-import MergeSortThreads.MergeSortThreads;
 import MergeSortThreads.MergeSortThreadsDivide;
-import MergeSortThreads.MergeSortThreadsDivideOneArray;
-import OtherSorters.MergeSort;
-import OtherSorters.MergeSortLessAlocc;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
-import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -35,7 +29,7 @@ public class SorterBenchmarks {
      * Each fork has a different seed.
      */
     public static void main(String[] args) throws Exception {
-        for (int f = 0; f < 5; f++) {
+        for (int f = 0; f < 1; f++) {
             File seedFile = new File(seedPath);
             if (seedFile.exists()) {
                 if (!seedFile.delete()) {
@@ -115,12 +109,12 @@ public class SorterBenchmarks {
         }
     }
 
-    @Benchmark
-    public void mergeSortThreadsDivideOneArrayBenchmark(SorterState sorterState) {
-        MergeSortThreadsDivideOneArray<Integer> mergeSortThreadsDivideOneArray = new MergeSortThreadsDivideOneArray<>(sorterState.copy);
-        mergeSortThreadsDivideOneArray.start();
-        mergeSortThreadsDivideOneArray.complete();
-    }
+//    @Benchmark
+//    public void mergeSortThreadsDivideOneArrayBenchmark(SorterState sorterState) {
+//        MergeSortThreadsDivideOneArray<Integer> mergeSortThreadsDivideOneArray = new MergeSortThreadsDivideOneArray<>(sorterState.copy);
+//        mergeSortThreadsDivideOneArray.start();
+//        mergeSortThreadsDivideOneArray.complete();
+//    }
 
     @Benchmark
     public void mergeSortThreadsDivideBenchmark(SorterState sorterState) {
@@ -129,25 +123,25 @@ public class SorterBenchmarks {
         mergeSortThreadsDivide.complete();
     }
 
-    @Benchmark
-    public void mergeSortThreadsBenchmark(SorterState sorterState) {
-        MergeSortThreads<Integer> mergeSortThreads = new MergeSortThreads<>(sorterState.copy);
-        mergeSortThreads.start();
-        mergeSortThreads.complete();
-    }
+//    @Benchmark
+//    public void mergeSortThreadsBenchmark(SorterState sorterState) {
+//        MergeSortThreads<Integer> mergeSortThreads = new MergeSortThreads<>(sorterState.copy);
+//        mergeSortThreads.start();
+//        mergeSortThreads.complete();
+//    }
+//
+//    @Benchmark
+//    public void mergeSortLessAloccBenchmark(SorterState sorterState) {
+//        MergeSortLessAlocc.sortArray(sorterState.copy);
+//    }
+//
+//    @Benchmark
+//    public void mergeSortBenchmark(SorterState sorterState) {
+//        MergeSort.sortArray(sorterState.copy);
+//    }
 
-    @Benchmark
-    public void mergeSortLessAloccBenchmark(SorterState sorterState) {
-        MergeSortLessAlocc.sortArray(sorterState.copy);
-    }
-
-    @Benchmark
-    public void mergeSortBenchmark(SorterState sorterState) {
-        MergeSort.sortArray(sorterState.copy);
-    }
-
-    @Benchmark
-    public void referenceSortBenchmark(SorterState sorterState) {
-        Arrays.sort(sorterState.copy);
-    }
+//    @Benchmark
+//    public void referenceSortBenchmark(SorterState sorterState) {
+//        Arrays.sort(sorterState.copy);
+//    }
 }

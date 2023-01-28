@@ -150,3 +150,8 @@ Testing one array against two with 500000 Integers
 Benchmark                                Mode   Cnt         Score        Error  Units
 mergeSortThreadsDivideBenchmark          avgt  1000  36016176.400 ± 477750.032  ns/op
 mergeSortThreadsDivideOneArrayBenchmark  avgt  1000  50938524.000 ± 839397.484  ns/op
+
+500000 Integers
+Benchmark                                 Mode   Cnt         Score        Error  Units
+MergeSortThreadsDivideReferenceBenchmark  avgt  1000  42312007.400 ± 456730.620  ns/op
+mergeSortThreadsDivideBenchmark           avgt  1000  37225478.500 ± 252909.002  ns/op

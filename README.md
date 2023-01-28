@@ -190,6 +190,11 @@ If there is a negative impact from the distance of the arrays in memory these te
 Results with sorting 500,000 integers with 11 processors (the main thread was not doing any work):
 * The mergeSortThreadsDivideOneArray algorithm takes anywhere from 145.56%
   to 137.28% as long as mergeSortThreadsDivide.
+
+#### Arrays.Sort note
+Another test is to do the primary sorting using Arrays.Sort instead of the custom merge sort.
+The test ended up slower than MergeSortThreadsDivide.
+
 ---
 ### Benchmark Data
 In SortBenchmarks/BenchmarkResults.txt is the data used for each of the time efficiency percentages with an 
