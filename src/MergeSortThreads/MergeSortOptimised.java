@@ -28,6 +28,7 @@ public class MergeSortOptimised<E extends Comparable<? super E>> {
     /**
      * Initialises MergeSortOptimised with an array.
      * The number of threads that will be used is equal to Runtime.getRuntime().availableProcessors() - 1.
+     *
      * @param array the array to sort
      */
     public MergeSortOptimised(E[] array) {
@@ -36,7 +37,8 @@ public class MergeSortOptimised<E extends Comparable<? super E>> {
 
     /**
      * Initialises MergeSortOptimised with an array and a desired threadCount.
-     * @param array the array to sort
+     *
+     * @param array       the array to sort
      * @param threadCount the number of threads that should be used while sorting
      */
     public MergeSortOptimised(E[] array, int threadCount) {
@@ -46,10 +48,10 @@ public class MergeSortOptimised<E extends Comparable<? super E>> {
         setupSections(threadCount);
     }
 
-
     /**
      * Divides the array into sections.
      * Each section will have a thread object attached to it.
+     *
      * @param threadCount the number of sections the array will be divided into
      */
     private void setupSections(int threadCount) {
@@ -82,6 +84,7 @@ public class MergeSortOptimised<E extends Comparable<? super E>> {
     /**
      * Begins the sorting on all the threads.
      * Calling start after previously calling start or run will throw an IllegalStateException.
+     *
      * @throws IllegalStateException if the Sorting has already started or completed
      */
     public void start() {
@@ -99,6 +102,7 @@ public class MergeSortOptimised<E extends Comparable<? super E>> {
     /**
      * Runs the sorting on the single main thread.
      * Calling run after previously calling start or run will throw an IllegalStateException.
+     *
      * @throws IllegalStateException if the Sorting has already started or completed
      */
     public void run() {
@@ -132,6 +136,7 @@ public class MergeSortOptimised<E extends Comparable<? super E>> {
 
     /**
      * Returns weather or not the array is sorted.
+     *
      * @return true if the array is sorted, false if it is still sorting
      */
     public boolean isCompleted() {
@@ -173,7 +178,7 @@ public class MergeSortOptimised<E extends Comparable<? super E>> {
      * Gets a new target section index on the True array (array) to merge to.
      * If the target section index is found it sets that section to not sorted.
      * If no section is found it sets the given section as sorted.
-     *
+     * <p>
      * Two methods where required so that there is a half chance two threads will
      * be blocked by the synchronized section.
      * Synchronized blocks are required because two threads could be searching for a section to merge
@@ -199,7 +204,7 @@ public class MergeSortOptimised<E extends Comparable<? super E>> {
      * Gets a new target section index on the False array (copy) to merge to.
      * If the target section index is found it sets that section to not sorted.
      * If no section is found it sets the given section to sorted.
-     *
+     * <p>
      * Two methods where required so that there is a half chance two threads will
      * be blocked by the synchronized section.
      * Synchronized blocks are required because two threads could be searching for a section to merge
@@ -273,8 +278,9 @@ public class MergeSortOptimised<E extends Comparable<? super E>> {
      * MergeSorts the two SortSections chains together into a single SortSection chain.
      * The SortSection in the chain are order by their index.
      * Returns the SortSection at the begging of the chain.
-     * @param output the array to sort to
-     * @param input the array with the half sorted values
+     *
+     * @param output   the array to sort to
+     * @param input    the array with the half sorted values
      * @param section1 the first section chain
      * @param section2 the second section chain
      * @return a new sorted SortSection chain
@@ -382,9 +388,10 @@ public class MergeSortOptimised<E extends Comparable<? super E>> {
 
     /**
      * Populates an array of integers that point to sections with indices in sorted order.
+     *
      * @param newSectionOrder the output indices of the new section order
-     * @param section1 the first section to merge
-     * @param section2 the second section to merge
+     * @param section1        the first section to merge
+     * @param section2        the second section to merge
      */
     private void getSectionOrder(int[] newSectionOrder, SortSection section1, SortSection section2) {
         for (int index = 0; index < newSectionOrder.length; index++) {
@@ -400,6 +407,7 @@ public class MergeSortOptimised<E extends Comparable<? super E>> {
 
     /**
      * Recursively sorts the individual section alternating what arrays are the output and copy.
+     *
      * @param output the array that should be sorted at between the indices given
      * @param input  the array with the given values
      * @param lower  the lower index to be sorted
@@ -415,10 +423,11 @@ public class MergeSortOptimised<E extends Comparable<? super E>> {
 
     /**
      * Merges the two parts of the array together in sorted order
+     *
      * @param output the array that should end up sorted
-     * @param input the half sorted array with the values to sort
-     * @param lower the lower index to be sorted of the first part
-     * @param upper the upper index to be sorted of the first part
+     * @param input  the half sorted array with the values to sort
+     * @param lower  the lower index to be sorted of the first part
+     * @param upper  the upper index to be sorted of the first part
      * @param lower2 the lower index to be sorted of the second part
      * @param upper2 the upper index to be sorted of the second part
      */
