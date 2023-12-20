@@ -87,6 +87,33 @@ public class MergeSortOptimisedTest {
         }
     }
 
+//    @Test
+//    public void randomBruteForceIterativeSortTest() {
+//        Random random = new Random(1);
+//        for (int i = 0; i < 50; i++) {
+//            Integer[] integers = new Integer[random.nextInt(100,10000)];
+//            for (int f = 0; f < integers.length; f++) {
+//                integers[f] = random.nextInt();
+//            }
+//            int threads = random.nextInt(3, 20);
+//            MergeSortOptimised<Integer> mergeSortOptimised = new MergeSortOptimised<>(integers, threads);
+//            Assert.assertFalse(checkSorted(integers));
+//            Integer[] duplicate = Arrays.copyOf(integers, integers.length);
+//            int lower1 = integers[0];
+//            int lower2 = integers[1];
+//            int upper1 = integers[integers.length - 1];
+//            int upper2 = integers[integers.length - 2];
+//            mergeSortOptimised.mergeSortIterative(integers, duplicate, 2, integers.length - 3);
+//            if (integers[0] != lower1) Assert.fail();
+//            if (integers[1] != lower2) Assert.fail();
+//            if (integers[integers.length - 1] != upper1) Assert.fail();
+//            if (integers[integers.length - 2] != upper2) Assert.fail();
+//            boolean out = checkSorted(integers);
+//            if (!out)
+//                Assert.fail("Test " + i + " failed an output of:\n" + Arrays.toString(integers));
+//        }
+//    }
+
     boolean checkSorted(Comparable[] array) {
         for (int i = 1; i < array.length; i++) {
             int temp = array[i - 1].compareTo(array[i]);

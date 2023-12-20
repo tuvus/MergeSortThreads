@@ -1,4 +1,5 @@
 package MergeSortThreads;
+
 import java.util.ArrayList;
 
 /**
@@ -10,8 +11,8 @@ import java.util.ArrayList;
  * The sorting is completed when isCompleted returns true.
  * To ensure that the array is sorted call .complete() on MergeSortOptimised.
  *
- * @author Oskar
  * @param <E> the type to be sorted
+ * @author Oskar
  */
 public class MergeSortOptimised<E extends Comparable<? super E>> {
     private E[] array;
@@ -242,9 +243,9 @@ public class MergeSortOptimised<E extends Comparable<? super E>> {
         public void run() {
             //Merge the individual section
             if (section.outputArray)
-                mergeSortRec(array, copy, section.lowerIndex, section.upperIndex);
+                mergeSortIterative(array, copy, section.lowerIndex, section.upperIndex);
             else
-                mergeSortRec(copy, array, section.lowerIndex, section.upperIndex);
+                mergeSortIterative(copy, array, section.lowerIndex, section.upperIndex);
             section.outputArray = !section.outputArray;
 
             //Merges with eligible sections until sorting is complete
@@ -406,19 +407,49 @@ public class MergeSortOptimised<E extends Comparable<? super E>> {
     }
 
     /**
-     * Recursively sorts the individual section alternating what arrays are the output and copy.
+     * Iteratively sorts the individual section alternating what arrays are the output and copy.
      *
      * @param output the array that should be sorted at between the indices given
      * @param input  the array with the given values
      * @param lower  the lower index to be sorted
      * @param upper  the upper index to be sorted
      */
-    private void mergeSortRec(E[] output, E[] input, int lower, int upper) {
-        if (upper - lower <= 0)
-            return;
-        mergeSortRec(input, output, lower, lower + ((upper - lower) / 2));
-        mergeSortRec(input, output, lower + ((upper - lower) / 2) + 1, upper);
-        merge(output, input, lower, lower + ((upper - lower) / 2), lower + ((upper - lower) / 2) + 1, upper);
+    public void mergeSortIterative(E[] output, E[] input, int lower, int upper) {
+        // The last partition size is always <= than the max
+        int maxPartitionSize = 20;
+        int numberOfPartitions = (upper - lower + maxPartitionSize) / maxPartitionSize;
+        int lowerPartitionIndex = lower;
+        for (int i = 0; i < numberOfPartitions; i++) {
+            int upperPartitionBound = Math.min(lowerPartitionIndex + maxPartitionSize - 1, upper);
+            insertionSort(input, lowerPartitionIndex, upperPartitionBound);
+            lowerPartitionIndex += maxPartitionSize;
+        }
+
+        E[] current = input;
+        E[] next = output;
+
+        while (numberOfPartitions >= 2) {
+            lowerPartitionIndex = lower;
+            int numberOfEvenPartitions = numberOfPartitions / 2;
+            for (int i = 0; i < numberOfEvenPartitions; i++) {
+                int secondPartitionLowerIndex = lowerPartitionIndex + maxPartitionSize;
+                merge(next, current, lowerPartitionIndex, secondPartitionLowerIndex - 1,
+                        secondPartitionLowerIndex, Math.min(secondPartitionLowerIndex + maxPartitionSize - 1, upper));
+                lowerPartitionIndex = secondPartitionLowerIndex + maxPartitionSize;
+            }
+            numberOfPartitions = (numberOfPartitions + 1) / 2;
+            // Copy over the odd partition
+            if (numberOfEvenPartitions != numberOfPartitions) {
+                System.arraycopy(current, lowerPartitionIndex, next, lowerPartitionIndex, upper - lowerPartitionIndex + 1);
+            }
+            maxPartitionSize *= 2;
+            E[] temp = current;
+            current = next;
+            next = temp;
+        }
+        if (current == input) {
+            System.arraycopy(input, lower, output, lower, upper - lower + 1);
+        }
     }
 
     /**
@@ -448,6 +479,18 @@ public class MergeSortOptimised<E extends Comparable<? super E>> {
             System.arraycopy(input, rhs, output, index, upper2 - index + 1);
         } else {
             System.arraycopy(input, lhs, output, index, upper2 - index + 1);
+        }
+    }
+
+    private void insertionSort(E[] array, int lower, int upper) {
+        for (int i = lower + 1; i <= upper; i++) {
+            E value = array[i];
+            int j = i - 1;
+            for (; j >= lower; j--) {
+                if (array[j].compareTo(value) <= 0) break;
+                array[j + 1] = array[j];
+            }
+            array[j + 1] = value;
         }
     }
 }
