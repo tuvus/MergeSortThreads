@@ -1,25 +1,27 @@
 package SortBenchmarks;
 
+import MergeSortThreads.MergeSortOptimised;
 import MergeSortThreads.MergeSortThreadsDivide;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-@Fork(value = 2)
+@Fork(value = 5)
 @Warmup(iterations = 5)
 @Measurement(iterations = 500, timeUnit = TimeUnit.NANOSECONDS, time = 1)
 //@Fork(value = 1)
 //@Warmup(iterations = 0)
 //@Measurement(iterations = 1, timeUnit = TimeUnit.NANOSECONDS, time = 1)
 public class SorterBenchmarks {
-    static final int forks = 2;
+    static final int forks = 1;
     static final String seedPath = "src/SortBenchmarks/seeds.txt";
     static final String forkIndexPath = "src/SortBenchmarks/forkIndex.txt";
 
@@ -117,8 +119,20 @@ public class SorterBenchmarks {
 //    }
 
     @Benchmark
+    public void referenceThreads(SorterState sorterState) {
+        Arrays.parallelSort(sorterState.copy);
+    }
+
+    @Benchmark
+    public void mergeSortOptimised(SorterState sorterState) {
+        MergeSortOptimised<Integer> mergeSortOptimised = new MergeSortOptimised<>(sorterState.copy);
+        mergeSortOptimised.start();
+        mergeSortOptimised.complete();
+    }
+
+    @Benchmark
     public void mergeSortThreadsDivideBenchmark(SorterState sorterState) {
-        MergeSortThreadsDivide<Integer> mergeSortThreadsDivide = new MergeSortThreadsDivide<>(sorterState.copy);
+        MergeSortThreadsDivide<Integer> mergeSortThreadsDivide = new MergeSortThreadsDivide<>(sorterState.copy, 11);
         mergeSortThreadsDivide.start();
         mergeSortThreadsDivide.complete();
     }
